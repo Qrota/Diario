@@ -194,24 +194,54 @@
 
     <div class="footer">Sistema Acalanto • v2.0</div>
 </div>
-
-<script>
-    // Carrega dados salvos ou inicia vazio
+    <script>
     let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
     let sessionData = JSON.parse(localStorage.getItem('acalanto_session')) || null;
+    let currentLocation = null;
 
-    // Inicialização ao carregar a página
+    // --- FUNÇÃO FULLSCREEN (CORRIGIDA E MOVIDA PARA FORA) ---
+    function entrarFullscreen() {
+        // iOS (Safari) não suporta a API de Fullscreen padrão em elementos que não sejam <video>
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) return; 
+
+        const el = document.documentElement;
+        const requestMethod = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+
+        if (requestMethod) {
+            requestMethod.call(el).catch(err => {
+                console.log("Erro ao tentar modo tela cheia: ", err.message);
+            });
+        }
+    }
+
+    // Ativa o fullscreen no primeiro clique na página (exigência dos navegadores)
+    document.addEventListener("click", entrarFullscreen, { once: true });
+
+    // --- RESTANTE DAS FUNÇÕES ---
+
     window.addEventListener('load', () => {
-        getLocation(); // 🔥 chama localização
+        getLocation(); 
         updateTimeToNow();
         renderList();
         
-        // Se já houver sessão salva, preenche os campos automaticamente
         if (sessionData) {
             document.getElementById('professional').value = sessionData.professional;
             document.getElementById('atendimento').value = sessionData.atendimento;
         }
     });
+
+    function getLocation() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    currentLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+                },
+                (err) => console.warn("Erro localização:", err.message),
+                { enableHighAccuracy: true, timeout: 5000 }
+            );
+        }
+    }
 
     function updateTimeToNow() {
         const now = new Date();
@@ -226,7 +256,6 @@
         divFralda.style.display = (activity === "troca de fralda") ? "block" : "none";
     }
 
-    // Salvar Dados da Sessão
     document.getElementById("infoForm").addEventListener("submit", e => {
         e.preventDefault();
         sessionData = {
@@ -237,36 +266,34 @@
         alert("✅ Dados da sessão guardados!");
     });
 
-    // Registrar Atividade
     document.getElementById("activityForm").addEventListener("submit", e => {
         e.preventDefault();
-        if (!sessionData) return alert("⚠️ Primeiro, confirme os dados da sessão (nome e atendimento)!");
+        if (!sessionData) return alert("⚠️ Primeiro, confirme os dados da sessão!");
 
         const activity = document.getElementById("activity").value;
         let tipoTrocaLabel = "";
         
         if (activity === "troca de fralda") {
             const r = document.querySelector('input[name="tipo_troca"]:checked');
-            if (!r) return alert("⚠️ Selecione se foi Cocô, Xixi ou Ambos!");
-            
+            if (!r) return alert("⚠️ Selecione o tipo de troca!");
             const labels = { 'coco': '💩 Cocô', 'xixi': '💧 Xixi', 'coco_xixi': '💩💧 Ambos' };
             tipoTrocaLabel = labels[r.value];
         }
 
         const newActivity = {
-    time: document.getElementById("time").value,
-    activity: activity,
-    tipoTroca: tipoTrocaLabel,
-    obs: document.getElementById("obs").value,
-    location: currentLocation ? `${currentLocation.lat}, ${currentLocation.lon}` : "Não disponível",
-    date: new Date().toLocaleDateString('pt-BR')
-};
+            time: document.getElementById("time").value,
+            activity: activity,
+            tipoTroca: tipoTrocaLabel,
+            obs: document.getElementById("obs").value,
+            location: currentLocation ? `${currentLocation.lat}, ${currentLocation.lon}` : "Não disponível",
+            date: new Date().toLocaleDateString('pt-BR')
+        };
 
         activitiesArray.push(newActivity);
         localStorage.setItem('acalanto_activities', JSON.stringify(activitiesArray));
         
         renderList();
-        e.target.reset(); // Limpa o formulário de atividade
+        e.target.reset();
         updateTimeToNow();
         toggleFraldaOptions();
     });
@@ -277,13 +304,11 @@
             list.innerHTML = '<li style="color:#999; text-align:center">Nenhum registro.</li>';
             return;
         }
-
         list.innerHTML = '';
         activitiesArray.forEach((item) => {
             const li = document.createElement("li");
             let titulo = item.activity.toUpperCase();
             if (item.tipoTroca) titulo += ` - ${item.tipoTroca}`;
-
             li.innerHTML = `
                 <div style="display: flex; justify-content: space-between;">
                     <strong>${item.time}</strong>
@@ -295,93 +320,41 @@
         });
     }
 
-    // Botão Limpar Tudo (CORRIGIDO)
     function clearAllData() {
-        if (confirm("⚠️ Deseja apagar tudo e começar um novo plantão?")) {
+        if (confirm("⚠️ Deseja apagar tudo?")) {
             localStorage.clear();
             activitiesArray = [];
             sessionData = null;
-            location.reload(); // Recarrega a página do zero
+            location.reload();
         }
     }
 
-    // Salvar .TXT (CORRIGIDO)
     document.getElementById("save").addEventListener("click", () => {
         if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para salvar!");
-
-        let content = `DIÁRIO ACALANTO BEBÊ\nPROFISSIONAL: ${sessionData.professional}\nATENDIMENTO: ${sessionData.atendimento}\nDATA: ${new Date().toLocaleDateString()}\n\n`;
-        
+        let content = `DIÁRIO ACALANTO BEBÊ\nPROFISSIONAL: ${sessionData.professional}\nATENDIMENTO: ${sessionData.atendimento}\n\n`;
         activitiesArray.forEach((a, i) => {
-        content += `${i+1}. [${a.time}] ${a.activity.toUpperCase()}${a.tipoTroca ? ' ('+a.tipoTroca+')' : ''}\n`;
-        content += `   📍 Localização: ${a.location}\n`;
-        content += `${a.obs ? '   Obs: '+a.obs : ''}\n---------------------------\n`;
+            content += `${i+1}. [${a.time}] ${a.activity.toUpperCase()}${a.tipoTroca ? ' ('+a.tipoTroca+')' : ''}\n`;
+            content += `   📍 Localização: ${a.location}\n${a.obs ? '   Obs: '+a.obs : ''}\n---------------------------\n`;
         });
-
         const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = `diario_acalanto_${new Date().toLocaleDateString().replace(/\//g, '-')}.txt`;
-        document.body.appendChild(a);
+        a.download = `diario_acalanto.txt`;
         a.click();
-        document.body.removeChild(a);
     });
 
-    // Compartilhar WhatsApp
     document.getElementById("share").addEventListener("click", () => {
         if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para compartilhar!");
-        
         let msg = `*DIÁRIO ACALANTO BEBÊ*\n*Profissional:* ${sessionData.professional}\n*Atendimento:* ${sessionData.atendimento}\n\n`;
         activitiesArray.forEach(a => {
             msg += `• [${a.time}] *${a.activity.toUpperCase()}* ${a.tipoTroca ? '['+a.tipoTroca+']' : ''}\n${a.obs ? '_'+a.obs+'_' : ''}\n\n`;
         });
-
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     });
 
-    // Segurança contra fecho acidental
     window.onbeforeunload = function() {
         if (activitiesArray.length > 0) return "Tem dados não salvos!";
     };
-    // 🌍 Variável global de localização
-let currentLocation = null;
-
-// 📍 Capturar localização automaticamente
-function getLocation() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                currentLocation = {
-                    lat: pos.coords.latitude,
-                    lon: pos.coords.longitude
-                };
-                console.log("📍 Localização capturada:", currentLocation);
-            },
-            (err) => {
-                console.warn("⚠️ Erro ao obter localização:", err.message);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 5000
-            }
-        );
-    } else {
-        console.warn("Geolocalização não suportada.");
-    }
-    function isIOS(){
-    return /iPad|iPhone|iPod/.test(navigator.userAgent);
-}
-
-function entrarFullscreen(){
-    if(isIOS()) return;
-    const el = document.documentElement;
-    if(el.requestFullscreen){
-        el.requestFullscreen();
-    }
-}
-
-document.body.addEventListener("click", entrarFullscreen, { once: true });
-
-}
 </script>
 </body>
 </html>
