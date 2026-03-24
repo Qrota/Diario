@@ -195,36 +195,27 @@
     <div class="footer">Sistema Acalanto • v2.0</div>
 </div>
     <script>
+    // ⚠️ COLE A URL DA SUA IMPLANTAÇÃO AQUI EMBAIXO:
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzh5-squRJFg5rgQUtvSuah39kqv3ZB5GjhSIgA2Dl1HERelUGTH9lbdIxcgA6V_Lon/exec";
+
     let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
     let sessionData = JSON.parse(localStorage.getItem('acalanto_session')) || null;
     let currentLocation = null;
 
-    // --- FUNÇÃO FULLSCREEN (CORRIGIDA E MOVIDA PARA FORA) ---
     function entrarFullscreen() {
-        // iOS (Safari) não suporta a API de Fullscreen padrão em elementos que não sejam <video>
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIOS) return; 
-
         const el = document.documentElement;
         const requestMethod = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-
-        if (requestMethod) {
-            requestMethod.call(el).catch(err => {
-                console.log("Erro ao tentar modo tela cheia: ", err.message);
-            });
-        }
+        if (requestMethod) requestMethod.call(el).catch(err => console.log(err));
     }
 
-    // Ativa o fullscreen no primeiro clique na página (exigência dos navegadores)
     document.addEventListener("click", entrarFullscreen, { once: true });
-
-    // --- RESTANTE DAS FUNÇÕES ---
 
     window.addEventListener('load', () => {
         getLocation(); 
         updateTimeToNow();
         renderList();
-        
         if (sessionData) {
             document.getElementById('professional').value = sessionData.professional;
             document.getElementById('atendimento').value = sessionData.atendimento;
@@ -234,9 +225,7 @@
     function getLocation() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    currentLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-                },
+                (pos) => { currentLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude }; },
                 (err) => console.warn("Erro localização:", err.message),
                 { enableHighAccuracy: true, timeout: 5000 }
             );
@@ -245,15 +234,12 @@
 
     function updateTimeToNow() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById("time").value = `${hours}:${minutes}`;
+        document.getElementById("time").value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     }
 
     function toggleFraldaOptions() {
         const activity = document.getElementById("activity").value;
-        const divFralda = document.getElementById("fraldaOptions");
-        divFralda.style.display = (activity === "troca de fralda") ? "block" : "none";
+        document.getElementById("fraldaOptions").style.display = (activity === "troca de fralda") ? "block" : "none";
     }
 
     document.getElementById("infoForm").addEventListener("submit", e => {
@@ -266,7 +252,25 @@
         alert("✅ Dados da sessão guardados!");
     });
 
-    document.getElementById("activityForm").addEventListener("submit", e => {
+    // --- FUNÇÃO DE ENVIO PARA O GOOGLE SHEETS ---
+    async function sendToGoogleSheets(data) {
+        if (GOOGLE_SCRIPT_URL === "SUA_URL_AQUI") return; // Não envia se não configurou a URL
+
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Necessário para Google Apps Script
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            console.log("Enviado para a planilha!");
+        } catch (error) {
+            console.error("Erro ao enviar:", error);
+        }
+    }
+
+    document.getElementById("activityForm").addEventListener("submit", async e => {
         e.preventDefault();
         if (!sessionData) return alert("⚠️ Primeiro, confirme os dados da sessão!");
 
@@ -281,17 +285,23 @@
         }
 
         const newActivity = {
+            date: new Date().toLocaleDateString('pt-BR'),
+            professional: sessionData.professional,
+            atendimento: sessionData.atendimento,
             time: document.getElementById("time").value,
             activity: activity,
             tipoTroca: tipoTrocaLabel,
             obs: document.getElementById("obs").value,
-            location: currentLocation ? `${currentLocation.lat}, ${currentLocation.lon}` : "Não disponível",
-            date: new Date().toLocaleDateString('pt-BR')
+            location: currentLocation ? `${currentLocation.lat}, ${currentLocation.lon}` : "Não disponível"
         };
 
+        // Salva Localmente
         activitiesArray.push(newActivity);
         localStorage.setItem('acalanto_activities', JSON.stringify(activitiesArray));
         
+        // Envia para o Google Planilhas
+        sendToGoogleSheets(newActivity);
+
         renderList();
         e.target.reset();
         updateTimeToNow();
@@ -321,7 +331,7 @@
     }
 
     function clearAllData() {
-        if (confirm("⚠️ Deseja apagar tudo?")) {
+        if (confirm("⚠️ Deseja apagar tudo? Isso limpa apenas a lista local.")) {
             localStorage.clear();
             activitiesArray = [];
             sessionData = null;
@@ -329,6 +339,7 @@
         }
     }
 
+    // Botões de salvar e compartilhar permanecem iguais...
     document.getElementById("save").addEventListener("click", () => {
         if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para salvar!");
         let content = `DIÁRIO ACALANTO BEBÊ\nPROFISSIONAL: ${sessionData.professional}\nATENDIMENTO: ${sessionData.atendimento}\n\n`;
@@ -352,9 +363,7 @@
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     });
 
-    window.onbeforeunload = function() {
-        if (activitiesArray.length > 0) return "Tem dados não salvos!";
-    };
+    window.onbeforeunload = function() { if (activitiesArray.length > 0) return "Tem dados não salvos!"; };
 </script>
 </body>
 </html>
