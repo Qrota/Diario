@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário Acalanto Bebê</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f3a8a8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Acalanto">
+    <link rel="apple-touch-icon" href="imagens/logo_acalantobebe1.png">
+
+    <style>
+        :root {
+            --primary: #f7d2d2;
+            --text: #555;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+            font-weight: 300;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(rgba(255, 245, 238, 0.6), rgba(238, 212, 204, 0.6)), url("imagens/fundo08.png");
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 620px;
+            background: linear-gradient(rgba(255, 255, 255, 0.541));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgb(188, 243, 252);
+            padding: 30px 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("imagens/mae_bebe_contorno3.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.08;
+            z-index: -1;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-weight: 400;
+            color: #f3a8a8;
+            font-size: 32px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 25px 0 15px;
+            color: #444;
+            font-size: 20px;
+        }
+
+        .field-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: #525050;
+            margin-bottom: 6px;
+            font-weight: 400;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+            color: #555;
+            border: 1px solid #e2c2c2;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #e8a4af;
+            box-shadow: 0 0 0 3px rgba(232, 164, 175, 0.25);
+        }
+
+        /* Estilo para os radios */
+        .radio-group {
+            background: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2c2c2;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        /* Botão Confirmar Dados da Sessão */
+        .btn-confirm {
+            background: linear-gradient(135deg, #fcb3c5, #f3a3b8);
+            color: white;
+        }
+        .btn-confirm:hover {
+            background: linear-gradient(135deg, #ff7a9e, #ff5e88);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(255, 122, 158, 0.3);
+        }
+
+        /* Botão Registrar Atividade */
+        .btn-register {
+            background: linear-gradient(135deg, #b9f9fd, #afe7ee);
+            color: #333;
+        }
+        .btn-register:hover {
+            background: linear-gradient(135deg, #6eb2d9, #4eb0c9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(110, 217, 168, 0.3);
+        }
+
+        /* Botão Salvar .txt */
+        .btn-save {
+            background: linear-gradient(135deg, #ffd6a5, #ffbb6b);
+            color: #333;
+        }
+        .btn-save:hover {
+            background: linear-gradient(135deg, #ffbb6b, #ffa23f);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(255, 187, 107, 0.3);
+        }
+
+        /* Botão Compartilhar no WhatsApp */
+        .btn-share {
+            background: linear-gradient(135deg, #a1f7c0, #18b9a7);
+            color: white;
+        }
+        .btn-share:hover {
+            background: linear-gradient(135deg, #4afa93, #0e7a6b);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        #list {
+            list-style: none;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #list li {
+            background: #fff;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14.5px;
+            border-left: 4px solid #f3a8a8;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .activity-detail {
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .date-time {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #999;
+        }
+        
+        .footer-logo {
+            display: block;
+            margin: 18px auto 0;
+            width: 32px;
+            height: 24px;
+            background: url('imagens/logo_acalantobebe1.png') center/contain no-repeat;
+            opacity: 0.6;
+        }
+
+        .empty-list {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+        }
+
+        /* Scroll personalizado */
+        #list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        #list::-webkit-scrollbar-thumb {
+            background: #f3a8a8;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo">
+        <h1>Acalanto Bebê</h1>
+    </div>
+
+    <form id="infoForm">
+        <div class="field-group">
+            <label>Nome da Profissional</label>
+            <select id="professional" required>
+                <option value="">— Selecione seu Nome —</option>
+                <option>Auricelia Gomes</option>
+                <option>Jociane Batista</option>
+                <option>Sonia Felix</option>
+                <option>Grazielle Pereira</option>
+                <option>Carla Cantanhede</option>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <label>Atendimento (Mãe/Bebê)</label>
+            <select id="atendimento" required>
+                <option value="">— Escolha o atendimento —</option>
+                <option>Mãe (Livia) - Bebê (Gabriel)</option>
+                <option>Mãe (Mariah) - Bebês (Gêmeos)</option>
+                <option>Mãe (Mariana) - Bebê (Antônio)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-confirm">Confirmar Dados da Sessão</button>
+    </form>
+
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+
+    <form id="activityForm">
+        <div class="field-group date-time">
+            <div>
+                <label>Horário</label>
+                <input type="time" id="time" required>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>Atividade</label>
+            <select id="activity" required onchange="toggleFraldaOptions()">
+                <option value="">Selecione a atividade</option>
+                <option value="troca de fralda">🚼 Troca de fralda</option>
+                <option value="medicacao">💊 Administração de medicação</option>
+                <option value="banho">🛁 Banho</option>
+                <option value="amamentacao">🍼 Amamentação</option>
+                <option value="sono">😴 Bebê dormindo</option>
+            </select>
+        </div>
+
+        <div class="field-group" id="fraldaOptions" style="display: none;">
+            <label>🩷 Tipo de troca</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="tipo_troca" value="coco"> 💩 Cocô
+                </label>
+                <label>
+                    <input type="radio" name="tipo_troca" value="xixi"> 💧 Xixi
+                </label>
+                <label>
+                    <input type="radio" name="tipo_troca" value="coco_xixi"> 💩💧 Ambos
+                </label>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>Observação</label>
+            <input type="text" id="obs" placeholder="Ex: Dormiu rápido, mamou bem, chorou um pouco...">
+        </div>
+
+        <button type="submit" class="btn-register">Registrar Atividade</button>
+    </form>
+
+    <h2>Atividades Registradas</h2>
+    <ul id="list"></ul>
+
+    <div class="actions">
+        <button id="save" class="btn-save">Salvar .txt</button>
+        <button id="share" class="btn-share">Compartilhar no WhatsApp</button>
+    </div>
+    <div class="footer">
+        Sistema interno • Acalanto Bebê
+        <div class="footer-logo"></div>
+    </div>
+</div>
+
+<script>
+    let sessionInfo = null;
+    const infoForm = document.getElementById("infoForm");
+    const activityForm = document.getElementById("activityForm");
+    const list = document.getElementById("list");
+
+    // Função para obter a data atual formatada
+    function getCurrentDateBR() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    // Função para obter o texto descritivo do tipo de troca
+    function getTipoTrocaText(value) {
+        const tipos = {
+            'coco': '💩 Cocô',
+            'xixi': '💧 Xixi',
+            'coco_xixi': '💩💧 Ambos (Cocô e Xixi)'
+        };
+        return tipos[value] || value;
+    }
+
+    // Função para obter o emoji da atividade
+    function getActivityEmoji(activity) {
+        const emojis = {
+            'troca de fralda': '🚼',
+            'medicacao': '💊',
+            'banho': '🛁',
+            'amamentacao': '🍼',
+            'sono': '😴'
+        };
+        return emojis[activity] || '📌';
+    }
+
+    // Função para mostrar/esconder opções de troca de fralda
+    function toggleFraldaOptions() {
+        const activity = document.getElementById("activity").value;
+        const fraldaOptions = document.getElementById("fraldaOptions");
+        
+        if (activity === "troca de fralda") {
+            fraldaOptions.style.display = "block";
+            // Adiciona required aos radios quando visível
+            const radios = document.querySelectorAll('input[name="tipo_troca"]');
+            radios.forEach(radio => radio.required = true);
+        } else {
+            fraldaOptions.style.display = "none";
+            // Remove required quando invisível
+            const radios = document.querySelectorAll('input[name="tipo_troca"]');
+            radios.forEach(radio => radio.required = false);
+            // Limpa a seleção
+            radios.forEach(radio => radio.checked = false);
+        }
+    }
+
+    // Função para adicionar atividade à lista
+    function addActivityToList(activityData) {
+        // Remove mensagem de lista vazia se existir
+        if (list.children.length === 1 && list.children[0].classList?.contains('empty-list')) {
+            list.innerHTML = '';
+        }
+        
+        const li = document.createElement("li");
+        const emoji = getActivityEmoji(activityData.activity);
+        
+        let activityText = `${emoji} ${activityData.activity.charAt(0).toUpperCase() + activityData.activity.slice(1)}`;
+        
+        // Se for troca de fralda, adiciona o tipo específico
+        if (activityData.activity === 'troca de fralda' && activityData.tipoTroca) {
+            activityText = `${emoji} Troca de fralda - ${activityData.tipoTroca}`;
+        }
+        
+        li.innerHTML = `
+            <div>
+                <strong>${activityData.date}</strong> | ${activityData.time} — 
+                <strong>${activityText}</strong>
+                ${activityData.obs ? `<div class="activity-detail">📝 Obs: ${activityData.obs}</div>` : ''}
+            </div>
+        `;
+        
+        list.appendChild(li);
+        
+        // Scroll para o novo item
+        li.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Função para limpar o formulário de atividades
+    function clearActivityForm() {
+        document.getElementById("activity").value = "";
+        document.getElementById("obs").value = "";
+        toggleFraldaOptions(); // Isso vai esconder e limpar as opções de fralda
+        
+        // Mantém o horário atual
+        const now = new Date();
+        const currentTime = now.toTimeString().slice(0, 5);
+        document.getElementById("time").value = currentTime;
+    }
+
+    // Confirmar dados da sessão
+    infoForm.addEventListener("submit", e => {
+        e.preventDefault();
+        sessionInfo = {
+            professional: document.getElementById("professional").value,
+            atendimento: document.getElementById("atendimento").value
+        };
+        alert("✅ Dados da sessão confirmados com sucesso!");
+    });
+
+    // Registrar atividade
+    activityForm.addEventListener("submit", e => {
+        e.preventDefault();
+
+        if (!sessionInfo) {
+            return alert("⚠️ Por favor, confirme os dados da profissional primeiro!");
+        }
+
+        const time = document.getElementById("time").value;
+        const activity = document.getElementById("activity").value;
+        const obs = document.getElementById("obs").value.trim();
+
+        if (!time || !activity) {
+            alert("⚠️ Por favor, preencha o horário e selecione uma atividade!");
+            return;
+        }
+
+        // Validação para troca de fralda
+        let tipoTroca = null;
+        if (activity === "troca de fralda") {
+            const selectedRadio = document.querySelector('input[name="tipo_troca"]:checked');
+            if (!selectedRadio) {
+                alert("⚠️ Por favor, selecione o tipo de troca de fralda (Cocô, Xixi ou Ambos)!");
+                return;
+            }
+            tipoTroca = getTipoTrocaText(selectedRadio.value);
+        }
+
+        const currentDate = getCurrentDateBR();
+
+        const activityData = {
+            date: currentDate,
+            time: time,
+            activity: activity,
+            tipoTroca: tipoTroca,
+            obs: obs
+        };
+
+        addActivityToList(activityData);
+        clearActivityForm();
+        
+        // Feedback visual
+        const btn = document.querySelector('.btn-register');
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Registrado!';
+        btn.style.opacity = '0.7';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.opacity = '1';
+        }, 1500);
+    });
+
+    // Salvar como arquivo .txt
+    document.getElementById("save").addEventListener("click", () => {
+        if (!sessionInfo) return alert("⚠️ Confirme os dados da profissional primeiro!");
+        if (list.children.length === 0 || (list.children.length === 1 && list.children[0].classList?.contains('empty-list'))) {
+            return alert("⚠️ Adicione pelo menos uma atividade!");
+        }
+
+        const activities = [...list.children].map(li => {
+            const text = li.textContent.trim();
+            return "• " + text;
+        }).join("\n");
+
+        const content = `DIÁRIO ACALANTO BEBÊ\n\n` +
+                        `Profissional: ${sessionInfo.professional}\n` +
+                        `Atendimento: ${sessionInfo.atendimento}\n` +
+                        `Data do diário: ${getCurrentDateBR()}\n` +
+                        `---------------------------\n\n` +
+                        `ATIVIDADES REGISTRADAS:\n${activities}\n`;
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `diario_${sessionInfo.professional.replace(/\s/g, '_')}_${getCurrentDateBR().replace(/\//g, '-')}.txt`;
+        a.click();
+        
+        // Feedback
+        alert("✅ Arquivo salvo com sucesso!");
+    });
+
+    // Compartilhar no WhatsApp
+    document.getElementById("share").addEventListener("click", () => {
+        if (!sessionInfo) return alert("⚠️ Confirme os dados da profissional primeiro!");
+        if (list.children.length === 0 || (list.children.length === 1 && list.children[0].classList?.contains('empty-list'))) {
+            return alert("⚠️ Adicione pelo menos uma atividade!");
+        }
+
+        const activities = [...list.children].map(li => {
+            const text = li.textContent.trim();
+            return "• " + text;
+        }).join("\n");
+
+        const text = `*DIÁRIO ACALANTO BEBÊ*\n\n` +
+                     `*Profissional:* ${sessionInfo.professional}\n` +
+                     `*Atendimento:* ${sessionInfo.atendimento}\n` +
+                     `*Data:* ${getCurrentDateBR()}\n\n` +
+                     `*Atividades Registradas:*\n${activities}`;
+
+        const encodedText = encodeURIComponent(text);
+        window.open(`https://api.whatsapp.com/send?text=${encodedText}`, '_blank');
+    });
+
+    // Inicialização
+    window.addEventListener('load', () => {
+        const now = new Date();
+        const currentTime = now.toTimeString().slice(0, 5);
+        document.getElementById("time").value = currentTime;
+        
+        // Adiciona mensagem de lista vazia
+        const emptyMessage = document.createElement('li');
+        emptyMessage.className = 'empty-list';
+        emptyMessage.textContent = '✨ Nenhuma atividade registrada ainda. Comece registrando uma!';
+        list.appendChild(emptyMessage);
+    });
+</script>
+
+</body>
+</html>
