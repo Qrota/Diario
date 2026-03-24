@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Acalanto">
-    <link rel="apple-touch-icon" href="imagens/logo_acalantobebe1.png">
+    <link rel="apple-touch-icon" href="logo_acalantobebe1.png">
 
     <style>
         :root {
@@ -31,7 +31,7 @@
         body {
             min-height: 100vh;
             padding: 20px;
-            background: linear-gradient(rgba(255, 245, 238, 0.6), rgba(238, 212, 204, 0.6)), url("imagens/fundo08.png");
+            background: linear-gradient(rgba(255, 245, 238, 0.6), rgba(238, 212, 204, 0.6)), url("fundo08.png");
             background-size: cover;
             background-attachment: fixed;
             display: flex;
@@ -196,14 +196,17 @@
 </div>
 
 <script>
+    // Carrega dados salvos ou inicia vazio
     let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
     let sessionData = JSON.parse(localStorage.getItem('acalanto_session')) || null;
 
-    // Inicialização
+    // Inicialização ao carregar a página
     window.addEventListener('load', () => {
         updateTimeToNow();
         renderList();
-        if(sessionData) {
+        
+        // Se já houver sessão salva, preenche os campos automaticamente
+        if (sessionData) {
             document.getElementById('professional').value = sessionData.professional;
             document.getElementById('atendimento').value = sessionData.atendimento;
         }
@@ -211,15 +214,18 @@
 
     function updateTimeToNow() {
         const now = new Date();
-        document.getElementById("time").value = now.toTimeString().slice(0, 5);
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById("time").value = `${hours}:${minutes}`;
     }
 
     function toggleFraldaOptions() {
-        const isFralda = document.getElementById("activity").value === "troca de fralda";
-        document.getElementById("fraldaOptions").style.display = isFralda ? "block" : "none";
+        const activity = document.getElementById("activity").value;
+        const divFralda = document.getElementById("fraldaOptions");
+        divFralda.style.display = (activity === "troca de fralda") ? "block" : "none";
     }
 
-    // Salva sessão no LocalStorage
+    // Salvar Dados da Sessão
     document.getElementById("infoForm").addEventListener("submit", e => {
         e.preventDefault();
         sessionData = {
@@ -227,136 +233,111 @@
             atendimento: document.getElementById("atendimento").value
         };
         localStorage.setItem('acalanto_session', JSON.stringify(sessionData));
-        alert("✅ Dados da sessão salvos!");
+        alert("✅ Dados da sessão guardados!");
     });
 
-    // Registra Atividade (Versão Corrigida)
-document.getElementById("activityForm").addEventListener("submit", e => {
-    e.preventDefault();
-    if (!sessionData) return alert("⚠️ Confirme os dados da profissional primeiro!");
+    // Registrar Atividade
+    document.getElementById("activityForm").addEventListener("submit", e => {
+        e.preventDefault();
+        if (!sessionData) return alert("⚠️ Primeiro, confirme os dados da sessão (nome e atendimento)!");
 
-    const activity = document.getElementById("activity").value;
-    let tipoTrocaLabel = "";
-    
-    // CORREÇÃO: Captura o texto amigável para o tipo de troca
-    if (activity === "troca de fralda") {
-        const r = document.querySelector('input[name="tipo_troca"]:checked');
-        if (!r) return alert("⚠️ Selecione o tipo de troca (Cocô, Xixi ou Ambos)!");
+        const activity = document.getElementById("activity").value;
+        let tipoTrocaLabel = "";
         
-        // Mapeia o valor para um texto legível
-        const labels = {
-            'coco': '💩 Cocô',
-            'xixi': '💧 Xixi',
-            'coco_xixi': '💩💧 Ambos'
-        };
-        tipoTrocaLabel = labels[r.value];
-    }
-
-    const newActivity = {
-        time: document.getElementById("time").value,
-        activity: activity,
-        tipoTroca: tipoTrocaLabel, // Agora salva o texto com emoji
-        obs: document.getElementById("obs").value,
-        date: new Date().toLocaleDateString('pt-BR')
-    };
-
-    activitiesArray.push(newActivity);
-    localStorage.setItem('acalanto_activities', JSON.stringify(activitiesArray));
-    
-    renderList();
-    e.target.reset();
-    updateTimeToNow();
-    toggleFraldaOptions();
-});
-
-    function renderList() {
-    const list = document.getElementById("list");
-    list.innerHTML = activitiesArray.length === 0 ? '<li style="color:#999; text-align:center">Nenhum registro.</li>' : '';
-    
-    activitiesArray.forEach((item) => {
-        const li = document.createElement("li");
-        
-        // Formata o título da atividade (Ex: 🚼 TROCA DE FRALDA - 💩 Cocô)
-        let tituloAtividade = item.activity.toUpperCase();
-        if (item.tipoTroca) {
-            tituloAtividade += ` - ${item.tipoTroca}`;
+        if (activity === "troca de fralda") {
+            const r = document.querySelector('input[name="tipo_troca"]:checked');
+            if (!r) return alert("⚠️ Selecione se foi Cocô, Xixi ou Ambos!");
+            
+            const labels = { 'coco': '💩 Cocô', 'xixi': '💧 Xixi', 'coco_xixi': '💩💧 Ambos' };
+            tipoTrocaLabel = labels[r.value];
         }
 
-        li.innerHTML = `
-            <div style="display: flex; justify-content: space-between;">
-                <strong>${item.time}</strong>
-                <span style="color: var(--rosa-forte); font-weight: 700; font-size: 13px;">${tituloAtividade}</span>
-            </div>
-            ${item.obs ? `<div style="margin-top: 5px; font-size: 13px; color: #777; border-top: 1px dashed #eee; padding-top: 3px;">📝 ${item.obs}</div>` : ''}
-        `;
-        list.appendChild(li);
-    });
-}
+        const newActivity = {
+            time: document.getElementById("time").value,
+            activity: activity,
+            tipoTroca: tipoTrocaLabel,
+            obs: document.getElementById("obs").value,
+            date: new Date().toLocaleDateString('pt-BR')
+        };
 
-    // Compartilhamento WhatsApp
+        activitiesArray.push(newActivity);
+        localStorage.setItem('acalanto_activities', JSON.stringify(activitiesArray));
+        
+        renderList();
+        e.target.reset(); // Limpa o formulário de atividade
+        updateTimeToNow();
+        toggleFraldaOptions();
+    });
+
+    function renderList() {
+        const list = document.getElementById("list");
+        if (activitiesArray.length === 0) {
+            list.innerHTML = '<li style="color:#999; text-align:center">Nenhum registro.</li>';
+            return;
+        }
+
+        list.innerHTML = '';
+        activitiesArray.forEach((item) => {
+            const li = document.createElement("li");
+            let titulo = item.activity.toUpperCase();
+            if (item.tipoTroca) titulo += ` - ${item.tipoTroca}`;
+
+            li.innerHTML = `
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>${item.time}</strong>
+                    <span style="color: #ff6fb7; font-weight: 700; font-size: 13px;">${titulo}</span>
+                </div>
+                ${item.obs ? `<div style="margin-top: 5px; font-size: 13px; color: #777; border-top: 1px dashed #eee; padding-top: 3px;">📝 ${item.obs}</div>` : ''}
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    // Botão Limpar Tudo (CORRIGIDO)
+    function clearAllData() {
+        if (confirm("⚠️ Deseja apagar tudo e começar um novo plantão?")) {
+            localStorage.clear();
+            activitiesArray = [];
+            sessionData = null;
+            location.reload(); // Recarrega a página do zero
+        }
+    }
+
+    // Salvar .TXT (CORRIGIDO)
+    document.getElementById("save").addEventListener("click", () => {
+        if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para salvar!");
+
+        let content = `DIÁRIO ACALANTO BEBÊ\nPROFISSIONAL: ${sessionData.professional}\nATENDIMENTO: ${sessionData.atendimento}\nDATA: ${new Date().toLocaleDateString()}\n\n`;
+        
+        activitiesArray.forEach((a, i) => {
+            content += `${i+1}. [${a.time}] ${a.activity.toUpperCase()}${a.tipoTroca ? ' ('+a.tipoTroca+')' : ''}\n${a.obs ? '   Obs: '+a.obs : ''}\n---------------------------\n`;
+        });
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `diario_acalanto_${new Date().toLocaleDateString().replace(/\//g, '-')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+
+    // Compartilhar WhatsApp
     document.getElementById("share").addEventListener("click", () => {
-        if (!sessionData || activitiesArray.length === 0) return alert("Sem dados para compartilhar!");
+        if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para compartilhar!");
         
-        let msg = `*DIÁRIO ACALANTO BEBÊ*\n`;
-        msg += `*Profissional:* ${sessionData.professional}\n`;
-        msg += `*Atendimento:* ${sessionData.atendimento}\n`;
-        msg += `*Data:* ${new Date().toLocaleDateString()}\n\n`;
-        
+        let msg = `*DIÁRIO ACALANTO BEBÊ*\n*Profissional:* ${sessionData.professional}\n*Atendimento:* ${sessionData.atendimento}\n\n`;
         activitiesArray.forEach(a => {
-            msg += `• ${a.time} - ${a.activity} ${a.tipoTroca ? '['+a.tipoTroca+']' : ''}\n  ${a.obs ? '_Obs: '+a.obs+'_' : ''}\n`;
+            msg += `• [${a.time}] *${a.activity.toUpperCase()}* ${a.tipoTroca ? '['+a.tipoTroca+']' : ''}\n${a.obs ? '_'+a.obs+'_' : ''}\n\n`;
         });
 
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     });
 
-    // Download TXT
-    // Função Corrigida para Salvar .txt
-document.getElementById("save").addEventListener("click", () => {
-    // 1. Validações iniciais
-    if (!sessionData) return alert("⚠️ Por favor, confirme os dados da profissional primeiro!");
-    if (activitiesArray.length === 0) return alert("⚠️ Não há atividades para salvar!");
-
-    // 2. Cabeçalho do arquivo
-    let content = `DIÁRIO ACALANTO BEBÊ\n`;
-    content += `===========================\n`;
-    content += `PROFISSIONAL: ${sessionData.professional}\n`;
-    content += `ATENDIMENTO: ${sessionData.atendimento}\n`;
-    content += `DATA: ${new Date().toLocaleDateString('pt-BR')}\n`;
-    content += `===========================\n\n`;
-    content += `ATIVIDADES REGISTRADAS:\n\n`;
-
-    // 3. Percorre o array de atividades para montar o corpo do texto
-    activitiesArray.forEach((item, index) => {
-        const num = index + 1;
-        const atividade = item.activity.toUpperCase();
-        const infoExtra = item.tipoTroca ? ` (${item.tipoTroca})` : "";
-        
-        content += `${num}. [${item.time}] ${atividade}${infoExtra}\n`;
-        if (item.obs) {
-            content += `   Obs: ${item.obs}\n`;
-        }
-        content += `---------------------------\n`;
-    });
-
-    content += `\nGerado automaticamente pelo Sistema Acalanto.`;
-
-    // 4. Criação do arquivo para download
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const link = document.createElement("a");
-    
-    // Nome do arquivo dinâmico (ex: diario_Auricelia_24-03-2024.txt)
-    const nomeArquivo = `diario_${sessionData.professional.split(' ')[0]}_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.txt`;
-    
-    link.href = URL.createObjectURL(blob);
-    link.download = nomeArquivo;
-    
-    // Simula o clique para baixar
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    alert("✅ Arquivo .txt gerado com sucesso!");
-});
+    // Segurança contra fecho acidental
+    window.onbeforeunload = function() {
+        if (activitiesArray.length > 0) return "Tem dados não salvos!";
+    };
 </script>
 </body>
 </html>
