@@ -367,20 +367,20 @@ function getLocation() {
     } else {
         console.warn("Geolocalização não suportada.");
     }
-    // 🖥️ Tela cheia ao clicar
-document.addEventListener("click", () => {
-    const doc = document.documentElement;
+    function isIOS(){
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
 
-    if (!document.fullscreenElement) {
-        if (doc.requestFullscreen) {
-            doc.requestFullscreen();
-        } else if (doc.webkitRequestFullscreen) {
-            doc.webkitRequestFullscreen();
-        } else if (doc.msRequestFullscreen) {
-            doc.msRequestFullscreen();
-        }
+function entrarFullscreen(){
+    if(isIOS()) return;
+    const el = document.documentElement;
+    if(el.requestFullscreen){
+        el.requestFullscreen();
     }
-});
+}
+
+document.body.addEventListener("click", entrarFullscreen, { once: true });
+
 }
 </script>
 </body>
