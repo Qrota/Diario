@@ -9,299 +9,412 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
 
-:root{
---rosa:#f3a8a8;
---rosa2:#ff6fb7;
---azul:#5ce1e6;
---texto:#6b7280;
+:root {
+    --rosa: #f3a8a8;
+    --rosa2: #ff6fb7;
+    --azul: #5ce1e6;
+    --texto: #6b7280;
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-
-font-family:'Lato',sans-serif;
-
-height:100vh;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-background:linear-gradient(rgba(245, 219, 201, 0.6), rgba(238, 212, 204, 0.6)), url("fundo08.png");
-
-background-size:cover;
-overflow:hidden;
-
+body {
+    font-family: 'Lato', sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(245, 219, 201, 0.3), rgba(238, 212, 204, 0.3));
+    overflow: hidden;
+    position: relative;
 }
 
-/* container */
+/* Canvas Matrix com blend mode suave */
+#matrix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.25;
+    transition: opacity 1s ease;
+}
 
-.splash{
-
-text-align:center;
-z-index:10;
-
-animation:fadeIn 1.2s ease;
-
+/* container principal */
+.splash {
+    text-align: center;
+    z-index: 10;
+    position: relative;
+    animation: fadeIn 1.2s ease;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    padding: 50px 40px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(243, 168, 168, 0.3);
+    max-width: 90%;
+    width: 500px;
 }
 
 /* logo */
-
-.logo{
-
-width:130px;
-
-animation:
-logoFloat 3s ease-in-out infinite,
-logoAppear 1.2s ease;
-
-filter:drop-shadow(0 15px 20px rgba(255,111,183,0.35));
-
-margin-bottom:15px;
-
+.logo {
+    width: 130px;
+    animation: logoFloat 3s ease-in-out infinite, logoAppear 1.2s ease;
+    filter: drop-shadow(0 15px 20px rgba(255, 111, 183, 0.25));
+    margin-bottom: 15px;
 }
 
 /* titulo */
-
-.title{
-
-font-size:34px;
-font-weight:300;
-
-color:var(--rosa);
-
-margin-bottom:5px;
-
-letter-spacing:1px;
-
-animation:titleReveal 1.5s ease;
-
+.title {
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--rosa);
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    animation: titleReveal 1.5s ease;
 }
 
 /* subtitulo */
-
-.subtitle{
-
-font-size:16px;
-color:var(--texto);
-
-margin-bottom:40px;
-
-opacity:0;
-
-animation:fadeText 2s 1s forwards;
-
+.subtitle {
+    font-size: 16px;
+    color: var(--texto);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeText 2s 1s forwards;
+    font-weight: 300;
 }
 
 /* loading text */
-
-.loading{
-
-font-size:14px;
-
-color:#888;
-
-margin-bottom:10px;
-
+.loading {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+    font-weight: 300;
 }
 
 /* progress */
-
-.progress{
-
-width:220px;
-height:6px;
-
-background:#eee;
-
-border-radius:20px;
-
-margin:auto;
-
-overflow:hidden;
-
+.progress {
+    width: 220px;
+    height: 6px;
+    background: #f0e0e0;
+    border-radius: 20px;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
 }
 
-.bar{
-
-height:100%;
-
-width: 1px;;
-
-background:#a1a1a1;
-
-animation:loading 4.5s forwards;
-
-border-radius:20px;
-
-}
-
-/* partículas */
-
-.particle{
-
-position:absolute;
-
-font-size:20px;
-
-opacity:.6;
-
-animation:floatUp linear infinite;
-
-pointer-events:none;
-
+.bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--rosa), var(--rosa2));
+    animation: loading 4.5s forwards;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 0 8px rgba(243, 168, 168, 0.6);
 }
 
 /* animações */
-
-@keyframes logoFloat{
-
-0%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-100%{transform:translateY(0)}
-
+@keyframes logoFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
 }
 
-@keyframes logoAppear{
-
-from{
-opacity:0;
-transform:scale(.5)
+@keyframes logoAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-to{
-opacity:1;
-transform:scale(1)
+@keyframes titleReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+@keyframes fadeText {
+    to { opacity: 1; }
 }
 
-@keyframes titleReveal{
-
-from{
-opacity:0;
-transform:translateY(20px)
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
-to{
-opacity:1;
-transform:translateY(0)
+@keyframes loading {
+    to { width: 100%; }
 }
 
+/* Partículas decorativas (opcional) */
+.particle {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0.6;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    z-index: 5;
 }
 
-@keyframes fadeText{
-
-to{opacity:1}
-
+@keyframes floatUp {
+    0% {
+        transform: translateY(110vh) rotate(0deg);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
 }
 
-@keyframes fadeIn{
-
-from{opacity:0}
-to{opacity:1}
-
+/* Responsividade */
+@media (max-width: 768px) {
+    .splash {
+        padding: 40px 30px;
+        width: 90%;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    .logo {
+        width: 100px;
+    }
 }
 
-@keyframes loading{
-
-to{width:100%}
-
+/* Efeito de brilho suave no container */
+.splash::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--rosa), var(--azul), var(--rosa2));
+    border-radius: 32px;
+    z-index: -1;
+    opacity: 0;
+    animation: borderGlow 3s ease-in-out infinite;
 }
 
-@keyframes floatUp{
-
-0%{
-transform:translateY(110vh) rotate(0deg);
-opacity:0;
+@keyframes borderGlow {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.3;
+    }
 }
-
-20%{
-opacity:.9;
-}
-
-100%{
-
-transform:translateY(-100px) rotate(360deg);
-opacity:0;
-
-}
-
-}
-
 </style>
 </head>
-
 <body>
 
+<canvas id="matrix"></canvas>
+
 <div class="splash">
-
-<img src="logo_acalantobebe1.png" class="logo">
-
-<div class="title">Acalanto Bebê</div>
-
-<div class="subtitle">
-Diário Acalanto
-</div>
-
-<div class="loading">
-Preparando atendimento...
-</div>
-
-<div class="progress">
-<div class="bar"></div>
-</div>
-
+    <img src="imagens/logo_acalantobebe1.png" class="logo" alt="Acalanto Bebê">
+    <div class="title">Acalanto Bebê</div>
+    <div class="subtitle">
+        ✨ Diário Acalanto ✨
+    </div>
+    <div class="loading">
+        diário sendo carregado...
+    </div>
+    <div class="progress">
+        <div class="bar"></div>
+    </div>
 </div>
 
 <script>
+// ===== MATRIX EFFECT OTIMIZADO =====
 
-const icons = ["💗","✨","💞","🍼","🌸"];
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
 
-function createParticle(){
+// Configuração inicial
+let width = window.innerWidth;
+let height = window.innerHeight;
 
-const el = document.createElement("div");
+canvas.width = width;
+canvas.height = height;
 
-el.className="particle";
+// Caracteres mais suaves e elegantes para o efeito
+const letters = "0123456789✦✧♡☆○□△▽";
+const chars = letters.split("");
 
-el.innerText=icons[Math.floor(Math.random()*icons.length)];
+// Configurações visuais
+const fontSize = 14;
+let columns = Math.floor(width / fontSize);
+let drops = [];
 
-el.style.left=Math.random()*100+"vw";
-
-el.style.fontSize=(Math.random()*18+16)+"px";
-
-el.style.animationDuration=(Math.random()*5+4)+"s";
-
-document.body.appendChild(el);
-
-setTimeout(()=>{
-
-el.remove();
-
-},9000);
-
+// Inicializa as gotas
+function initDrops() {
+    columns = Math.floor(width / fontSize);
+    drops = [];
+    for(let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * -100; // Começa de diferentes alturas
+    }
 }
 
-setInterval(createParticle,350);
+initDrops();
 
+// Função de desenho otimizada
+function draw() {
+    // Fundo com transparência suave para efeito de rastro
+    ctx.fillStyle = "rgba(255, 245, 238, 0.08)"; // Cor de fundo suave
+    ctx.fillRect(0, 0, width, height);
+    
+    // Cores gradientes para o efeito Matrix mais suave
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#f3a8a8");
+    gradient.addColorStop(0.5, "#5ce1e6");
+    gradient.addColorStop(1, "#ff6fb7");
+    
+    ctx.font = fontSize + "px 'Courier New', monospace";
+    
+    for(let i = 0; i < drops.length; i++) {
+        // Seleciona caractere aleatório
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        
+        // Calcula posição X
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        // Intensidade baseada na posição Y
+        const intensity = Math.min(1, (y / height) * 2);
+        
+        // Cores suaves baseadas na posição
+        if (y < height / 3) {
+            ctx.fillStyle = `rgba(243, 168, 168, ${0.3 + intensity * 0.5})`;
+        } else if (y < 2 * height / 3) {
+            ctx.fillStyle = `rgba(92, 225, 230, ${0.3 + intensity * 0.5})`;
+        } else {
+            ctx.fillStyle = `rgba(255, 111, 183, ${0.3 + intensity * 0.5})`;
+        }
+        
+        ctx.fillText(text, x, y);
+        
+        // Reinicia quando atinge o final ou aleatoriamente
+        if(y > height && Math.random() > 0.98) {
+            drops[i] = 0;
+        } else if(y > height) {
+            drops[i] = 0;
+        } else {
+            drops[i]++;
+        }
+        
+        // Adiciona alguns caracteres que caem mais rápido para efeito dinâmico
+        if(Math.random() > 0.99 && y < height) {
+            const extraText = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillStyle = `rgba(255, 111, 183, 0.8)`;
+            ctx.fillText(extraText, x + fontSize/2, y - fontSize);
+        }
+    }
+    
+    requestAnimationFrame(draw);
+}
 
-/* redirecionamento */
+// Inicia animação
+let animationId = requestAnimationFrame(draw);
 
-setTimeout(()=>{
+// Ajusta responsividade com debounce para melhor performance
+let resizeTimeout;
+window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        initDrops();
+    }, 100);
+});
 
-window.location.href="diario2.0.html";
+// Controle de performance: reduz taxa de frames quando não visível
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        cancelAnimationFrame(animationId);
+    } else {
+        animationId = requestAnimationFrame(draw);
+    }
+});
 
-},5000);
+// ===== REDIRECIONAMENTO COM TRANSIÇÃO SUAVE =====
 
+setTimeout(() => {
+    // Adiciona classe de fade out
+    const splash = document.querySelector('.splash');
+    const matrixCanvas = document.getElementById('matrix');
+    
+    splash.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    splash.style.opacity = '0';
+    splash.style.transform = 'scale(0.95)';
+    
+    matrixCanvas.style.transition = 'opacity 0.8s ease';
+    matrixCanvas.style.opacity = '0';
+    
+    setTimeout(() => {
+        window.location.href = "diario2.0.html";
+    }, 800);
+}, 5000);
+
+// Animação suave de entrada
+window.addEventListener('load', () => {
+    const splash = document.querySelector('.splash');
+    splash.style.animation = 'fadeIn 0.8s ease';
+    
+    // Ajusta opacidade do Matrix após carregar
+    const matrixCanvas = document.getElementById('matrix');
+    matrixCanvas.style.opacity = '0.35';
+    
+    // Pequeno delay para suavizar
+    setTimeout(() => {
+        matrixCanvas.style.opacity = '0.25';
+    }, 100);
+});
+
+// Efeito de partículas decorativas (opcional)
+function createParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    const emojis = ['✨', '🌸', '💕', '🦋', '⭐', '💗'];
+    particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+    particle.style.animationDuration = (Math.random() * 8 + 4) + 's';
+    particle.style.opacity = Math.random() * 0.4 + 0.2;
+    document.body.appendChild(particle);
+    
+    setTimeout(() => {
+        particle.remove();
+    }, 9000);
+}
+
+// Cria partículas suaves (opcional, comentado para performance)
+// setInterval(createParticle, 4000);
 </script>
 
 </body>
