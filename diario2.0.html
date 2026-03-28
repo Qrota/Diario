@@ -15,105 +15,250 @@
 
     <style>
         :root {
-            --primary: #f7d2d2;
-            --text: #555;
-            --rosa-forte: #ff6fb7;
-        }
+    --bg: #f0f4f8;
+    --primary: #f7d2d2;
+    --text: #555;
+    --rosa-forte: #ff6fb7;
+    --shadow-light: #ffffff;
+    --shadow-dark: #d1d9e6;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Lato', sans-serif;
-            font-weight: 300;
-        }
+/* RESET */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+}
 
-        body {
-            min-height: 100vh;
-            padding: 20px;
-            background: linear-gradient(rgba(255, 245, 238, 0.6), rgba(238, 212, 204, 0.6)), url("fundo08.png");
-            background-size: cover;
-            background-attachment: fixed;
-            display: flex;
-            justify-content: center;
-        }
+body {
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(#fcd9d999, #a0dcff79);
+    display: flex;
+    justify-content: center;
+}
 
-        .container {
-            width: 100%;
-            max-width: 620px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(188, 243, 252, 0.5);
-            padding: 30px 25px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-            position: relative;
-        }
+/* CONTAINER NEUMORPHIC */
+.container {
+    width: 100%;
+    max-width: 620px;
+    padding: 30px 25px;
+    border-radius: 20px;
+    background: var(--bg);
+    
 
-        .logo { text-align: center; margin-bottom: 30px; }
-        .logo h1 { font-weight: 400; color: #f3a8a8; font-size: 32px; }
+    box-shadow: 
+        10px 10px 20px var(--shadow-dark),
+        -10px -10px 20px var(--shadow-light);
+}
 
-        .field-group { margin-bottom: 18px; position: relative; }
-        label { display: block; font-size: 12px; color: #525050; margin-bottom: 6px; font-weight: 400; }
+/* LOGO */
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        select, input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 8px;
-            background: white;
-            font-size: 16px;
-            color: #555;
-            border: 1px solid #e2c2c2;
-            transition: all 0.3s ease;
-        }
+.logo h1 {
+    font-weight: 400;
+    color: #f3a8a8;
+    font-size: 32px;
+    text-shadow: 
+        10px 10px 10px ,
+        
+}
 
-        /* Estilo para o Input de Tempo com botão Agora */
-        .time-wrapper { display: flex; gap: 8px; }
-        .btn-now {
-            background: #f3a8a8;
-            color: white;
-            border: none;
-            padding: 0 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-        }
+/* INPUT GROUP */
+.field-group {
+    margin-bottom: 18px;
+}
 
-        .radio-group {
-            background: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #e2c2c2;
-            display: flex; gap: 15px; flex-wrap: wrap;
-        }
+label {
+    display: block;
+    font-size: 12px;
+    color: #525050;
+    margin-bottom: 6px;
+    font-weight: 400;
+}
 
-        .radio-group label { display: inline-flex; align-items: center; margin: 0; cursor: pointer; }
-        .radio-group input[type="radio"] { width: auto; margin-right: 5px; }
+/* INPUT NEUMORPHIC */
+select, input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text);
+    background: var(--bg);
 
-        button {
-            width: 100%; padding: 14px; border: none; border-radius: 8px;
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
-        }
+    box-shadow: 
+        inset 4px 4px 8px var(--shadow-dark),
+        inset -4px -4px 8px var(--shadow-light);
 
-        .btn-confirm { background: linear-gradient(135deg, #fcb3c5, #f3a3b8); color: white; }
-        .btn-register { background: linear-gradient(135deg, #b9f9fd, #afe7ee); color: #333; margin-top: 10px; }
-        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
-        .btn-save { background: #ffd6a5; color: #333; }
-        .btn-share { background: #25d366; color: white; }
-        .btn-clear { background: #ffcccc; color: #a33; grid-column: span 2; margin-top: 10px; font-size: 12px; padding: 8px; }
+    transition: 0.2s;
+}
 
-        #list { list-style: none; margin-top: 15px; max-height: 350px; overflow-y: auto; }
-        #list li {
-            background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px;
-            border-left: 5px solid #f3a8a8; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            animation: slideIn 0.3s ease;
-        }
+select:focus, input:focus {
+    box-shadow: 
+        inset 2px 2px 5px var(--shadow-dark),
+        inset -2px -2px 5px var(--shadow-light);
+}
 
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+/* TIME WRAPPER */
+.time-wrapper {
+    display: flex;
+    gap: 8px;
+}
 
-        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #999; }
+/* BOTÃO PEQUENO */
+.btn-now {
+    border: none;
+    padding: 0 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    background: var(--bg);
+
+    box-shadow: 
+        4px 4px 8px var(--shadow-dark),
+        -4px -4px 8px var(--shadow-light);
+}
+
+.btn-now:active {
+    box-shadow: 
+        inset 4px 4px 8px var(--shadow-dark),
+        inset -4px -4px 8px var(--shadow-light);
+}
+
+/* RADIO GROUP */
+.radio-group {
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    background: var(--bg);
+
+    box-shadow: 
+        inset 4px 4px 8px var(--shadow-dark),
+        inset -4px -4px 8px var(--shadow-light);
+}
+
+.radio-group label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* BOTÕES */
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--text);
+
+    box-shadow: 
+        6px 6px 12px var(--shadow-dark),
+        -6px -6px 12px var(--shadow-light);
+
+    transition: 0.2s;
+}
+
+button:active {
+    box-shadow: 
+        inset 6px 6px 12px var(--shadow-dark),
+        inset -6px -6px 12px var(--shadow-light);
+}
+
+/* BOTÕES ESPECÍFICOS */
+.btn-confirm { 
+    background: #fceaea;
+    color: #e07a9a;
+ }
+.btn-register { 
+    background: #e2fbfd;
+    color: #5bbbc5; margin-top: 10px; }
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn-save { 
+    color: #c28b3c;
+    background: #faefdf;
+ }
+
+.btn-share { 
+    color: #25d366;
+    background: #dcffe9; 
+}
+
+.btn-clear {
+    grid-column: span 2;
+    background: rgb(248, 228, 228);
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 8px;
+    color: #a33;
+}
+
+/* LISTA */
+#list {
+    list-style: none;
+    margin-top: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+#list li {
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: var(--bg);
+
+    box-shadow: 
+        4px 4px 8px var(--shadow-dark),
+        -4px -4px 8px var(--shadow-light);
+
+    border-left: 4px solid #f3a8a8;
+    animation: slideIn 0.3s ease;
+}
+
+/* ANIMAÇÃO */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+}
     </style>
 </head>
 <body>
@@ -193,7 +338,7 @@
         <button onclick="clearAllData()" class="btn-clear">Limpar Tudo (Novo Plantão)</button>
     </div>
 
-    <div class="footer">Sistema Acalanto • v2.0</div>
+    <div class="footer">Sistema Acalanto • v2.1</div>
 </div>
     <script>
     // ⚠️ COLE A URL DA SUA IMPLANTAÇÃO AQUI EMBAIXO:
