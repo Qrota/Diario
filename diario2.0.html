@@ -1,27 +1,26 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Acalanto Bebê | Registro de Atendimento</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário Acalanto Bebê</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f3a8a8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Acalanto">
+    <link rel="apple-touch-icon" href="imagens/logo_acalantobebe1.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<style>
-:root {
+    <style>
+        :root {
     --bg: #f0f4f8;
     --primary: #f7d2d2;
-    --text: #474646;
+    --text: #313131;
     --rosa-forte: #ff6fb7;
     --shadow-light: #ffffff;
     --shadow-dark: #d1d9e6;
-    
-    /* Novas variáveis para melhor contraste */
-    --btn-entrada-bg: #f7d4df;
-    --btn-entrada-text: #8a414a; /* Tom mais escuro para leitura */
-    --btn-saida-bg: #fcdfd2;
-    --btn-saida-text: #8c4231;   /* Tom mais escuro para leitura */
-    --disabled-bg: #e0e5ec;
-    --disabled-text: #a3b1c6;
 }
 
 /* RESET */
@@ -33,21 +32,15 @@
     font-weight: 300;
 }
 
-
 body {
-    margin: 0;
-    font-family: 'Lato', sans-serif;
-    font-weight: 300;
-    background: #ffffff;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 20px;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
 }
 
-/* === CONTAINER === */
-
+/* CONTAINER NEUMORPHIC */
 .container::before {
     content: "";
     position: absolute;
@@ -61,7 +54,7 @@ body {
     background-size: cover;
     background-position: center;
 
-    opacity: 0.07;   /* controla apenas a imagem */
+    opacity: 0.060;   /* controla apenas a imagem */
 
     z-index: 0;
 }
@@ -73,36 +66,37 @@ body {
     width: 100%;
     max-width: 620px;
     padding: 30px 25px;
-    border-radius: 10px;
-
+    border-radius: 20px;
     background: linear-gradient(#fcd9d979, #a0dcff5e);
-    box-shadow: 
-        12px 12px 25px var(--shadow-dark),
-        -12px -12px 25px var(--shadow-light);
+    
 
+    box-shadow: 
+        10px 10px 20px var(--shadow-dark),
+        -10px -10px 20px var(--shadow-light);
     position: relative;
 }
 
-/* === LOGO === */
+/* LOGO */
 .logo {
     text-align: center;
-    margin-bottom: 40px;
-}
-.logo h1 {
-    margin: 0;
-    color: #ffaaaa;
-    font-weight: 300;
-}
-.logo span {
-    font-size: 14px;
-    color: var(--text);
+    margin-bottom: 30px;
 }
 
-/* === CAMPOS === */
-.select-wrapper {
-    margin-top: 18px;
+.logo h1 {
+    font-weight: 300;
+    color: #ffaaaa;
+    font-size: 32px;
+    text-shadow: 
+        10px 10px 10px ,
+        
 }
-.select-wrapper label {
+
+/* INPUT GROUP */
+.field-group {
+    margin-bottom: 18px;
+}
+
+label {
     display: block;
     font-size: 12px;
     color: #525050;
@@ -110,7 +104,7 @@ body {
     font-weight: 400;
 }
 
-/* INPUT NEUMORPHIC (AFUNDADO) */
+/* INPUT NEUMORPHIC */
 select, input {
     width: 100%;
     padding: 12px 14px;
@@ -134,100 +128,158 @@ select:focus, input:focus {
         inset -2px -2px 5px var(--shadow-light);
 }
 
-/* === BOTÕES === */
+/* TIME WRAPPER */
+.time-wrapper {
+    display: flex;
+    gap: 8px;
+}
+
+/* BOTÃO PEQUENO */
+.btn-now {
+    border: none;
+    padding: 0 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    background: var(--bg);
+
+    box-shadow: 
+        4px 4px 8px var(--shadow-dark),
+        -4px -4px 8px var(--shadow-light);
+}
+
+.btn-now:active {
+    box-shadow: 
+        inset 4px 4px 8px var(--shadow-dark),
+        inset -4px -4px 8px var(--shadow-light);
+}
+
+/* RADIO GROUP */
+.radio-group {
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    background: var(--bg);
+
+    box-shadow: 
+        inset 4px 4px 8px var(--shadow-dark),
+        inset -4px -4px 8px var(--shadow-light);
+}
+
+.radio-group label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* BOTÕES */
 button {
     width: 100%;
     padding: 14px;
-    border-radius: 12px;
     border: 1px solid #ffffff;
+    border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
-    margin-top: 18px;
     cursor: pointer;
-
     background: var(--bg);
     color: var(--text);
 
-    box-shadow:
+    box-shadow: 
         6px 6px 12px var(--shadow-dark),
         -6px -6px 12px var(--shadow-light);
 
-    transition: all 0.2s ease;
-}
-/* ESTADO DESATIVADO VISUAL */
-button:disabled {
-    background: var(--disabled-bg) !important;
-    color: var(--disabled-text) !important;
-    box-shadow: none !important;
-    transform: none !important;
-    opacity: 1; /* importante para não ficar transparente demais */
-    cursor: not-allowed;
+    transition: 0.2s;
 }
 
-/* ESTADO ATIVO FORTE */
-.entrada.ativo {
-    background: linear-gradient(135deg, #fcbfd1, #fdb9ca);
-    color: #fff;
-}
-
-.saida.ativo {
-    background: linear-gradient(135deg, #ffb38a, #f59670);
-    color: #fff;
-}
-/* HOVER */
-button:hover {
-    transform: translateY(-2px);
-}
-
-/* CLIQUE (AFUNDADO) */
 button:active {
-    box-shadow:
-        inset 4px 4px 10px var(--shadow-dark),
-        inset -4px -4px 10px var(--shadow-light);
-    transform: scale(0.97);
+    box-shadow: 
+        inset 6px 6px 12px var(--shadow-dark),
+        inset -6px -6px 12px var(--shadow-light);
 }
 
-/* VARIAÇÕES */
-.entrada {
-    background: #f7d4df;
-    color: #e07a86;
-}
-.entrada:active {
-    background: #e4e4e4;
-    color:#aca9a8;
+/* BOTÕES ESPECÍFICOS */
+.btn-confirm { 
+    background: #fceaea;
+    color: #e07a9a;
+ }
+.btn-register { 
+    background: #e2fbfd;
+    color: #5bbbc5; margin-top: 10px; }
 
-}
-
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* === STATUS === */
-#status {
-    margin-top: 24px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 500;
-}
-.loading { color: #888; }
-.sucesso { color: #4caf50; }
-.erro { color: #e74c3c; }
-
-/* === INFO === */
-.info {
-    margin-top: 15px;
-    font-size: 13px;
-    text-align: center;
-    color: var(--text);
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 25px;
 }
 
-/* === FOOTER === */
-.footer {
+.btn-save { 
+    color: #c28b3c;
+    background: #faefdf;
+ }
+
+.btn-share { 
+    color: #25d366;
+    background: #dcffe9; 
+}
+
+.btn-clear {
+    grid-column: span 2;
+    background: rgb(248, 228, 228);
     margin-top: 10px;
+    font-size: 12px;
+    padding: 8px;
+    color: #a33;
+}
+
+/* LISTA */
+#list {
+    list-style: none;
+    margin-top: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+#list li {
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: var(--bg);
+
+    box-shadow: 
+        4px 4px 8px var(--shadow-dark),
+        -4px -4px 8px var(--shadow-light);
+
+    border-left: 4px solid #f3a8a8;
+    animation: slideIn 0.3s ease;
+}
+
+/* ANIMAÇÃO */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 30px;
     text-align: center;
-    font-size: 0.75rem;
-    color: #5c5b5b;
+    font-size: 12px;
+    color: #413f3f;
 }
 .footer-logo {
     display: block;
@@ -237,206 +289,258 @@ button:disabled {
     background: url('imagens/logo_acalantobebe1.png') center/contain no-repeat;
     opacity: 0.8;
 }
-</style>
+    </style>
 </head>
-
 <body>
 
 <div class="container">
+    <div class="logo"><h1>Acalanto Bebê</h1></div>
 
-    <div class="logo">
-        <h1>Acalanto Bebê</h1>
-        <span>Registro de Atendimento</span>
+    <form id="infoForm">
+        <div class="field-group">
+            <label>Profissional</label>
+            <select id="professional" required>
+                <option value="">— Selecione —</option>
+                <option>Auricelia Gomes</option><option>Jociane Batista</option>
+                <option>Sonia Felix</option><option>Grazielle Pereira</option>
+                <option>Carla Cantanhede</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Atendimento</label>
+            <select id="atendimento" required>
+                <option value="">— Selecione —</option>
+                <option>Mãe (Livia) - Bebê (Gabriel)</option>
+                <option>Mãe (Mariah) - Bebês (Gêmeos)</option>
+                <option>Mãe (Mariana) - Bebê (Antônio)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-confirm">Confirmar Dados da Sessão</button>
+    </form>
+
+    <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
+
+    <form id="activityForm">
+        <div class="field-group">
+            <label>Horário</label>
+            <div class="time-wrapper">
+                <input type="time" id="time" required>
+                <button type="button" class="btn-now" onclick="updateTimeToNow()">AGORA</button>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>Atividade</label>
+            <select id="activity" required onchange="toggleFraldaOptions()">
+                <option value="">Selecione...</option>
+                <option value="troca de fralda">🚼 Troca de fralda</option>
+                <option value="medicacao">💊 Medicação</option>
+                <option value="banho">🛁 Banho</option>
+                <option value="recreacao">🧸 Recreação </option>
+                <option value="amamentacao">🍼 Amamentação</option>
+                <option value="sono">😴 Bebê dormindo</option>
+            </select>
+        </div>
+
+        <div id="fraldaOptions" style="display: none;" class="field-group">
+            <label>Tipo de troca</label>
+            <div class="radio-group">
+                <label><input type="radio" name="tipo_troca" value="coco"> 💩 Cocô</label>
+                <label><input type="radio" name="tipo_troca" value="xixi"> 💧 Xixi</label>
+                <label><input type="radio" name="tipo_troca" value="coco_xixi"> 💩💧 Ambos</label>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>Observação</label>
+            <input type="text" id="obs" placeholder="Ex: Mamou 15min cada seio">
+        </div>
+
+        <button type="submit" class="btn-register">Registrar Atividade</button>
+    </form>
+
+    <h2 style="font-size: 18px; margin-top: 25px; color: #f3a8a8;">Atividades de Hoje</h2>
+    <ul id="list"></ul>
+
+    <div class="actions">
+        <button id="save" class="btn-save">Salvar .txt</button>
+        <button id="share" class="btn-share">WhatsApp</button>
+        <button onclick="clearAllData()" class="btn-clear">Limpar Tudo (Novo Plantão)</button>
     </div>
 
-    <div class="select-wrapper">
-        <label>Nome da Profissional Parceira</label>
-        <select id="nome">
-            <option value="">— Selecione —</option>
-            <option value="Auricelia">Auricelia Gomes</option>
-            <option value="Jociane">Jociane Batista</option>
-            <option value="Sonia">Sonia Felix </option>
-            <option value="Grazielle">Grazielle Pereira</option>
-            <option value="Carla">Carla Cantanhede</option>
-        </select>
-    </div>
-
-    <div class="select-wrapper">
-        <label>Selecione o atendimento</label>
-        <select id="cargo">
-            <option value="">— Selecione —</option>
-            <option value="(Livia)-(Gabriel)">Mãe (Livia) - Bebê (Gabriel)</option>
-            <option value="(Mariah)-(Gêmeos)">Mãe (Mariah) - Bebês (Gêmeos)</option>
-            <option value="(Mariana)-(Antônio)">Mãe (Mariana) - Bebê (Antônio)</option>
-        </select>
-    </div>
-
-    <button id="btnInicio" class="entrada" onclick="iniciarServico()">
-        Iníciar Atendimento
-    </button>
-
-    <button id="btnFim" class="saida" onclick="finalizarServico()">
-        Finalizar Atendimento
-    </button>
-
-    <div id="status"></div>
-
-    <div class="info">
-        Registro automático com data, hora e localização GPS
-    </div>
-
-    <div class="footer">
-        Sistema interno • Acalanto Bebê
-        <div class="footer-logo"></div>
-    </div>
+    <div class="footer">Sistema Acalanto • v2.1</div>
+          <div class="footer-logo"></div>
 </div>
+    <script>
+    // ⚠️ COLE A URL DA SUA IMPLANTAÇÃO AQUI EMBAIXO:
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzh5-squRJFg5rgQUtvSuah39kqv3ZB5GjhSIgA2Dl1HERelUGTH9lbdIxcgA6V_Lon/exec";
 
-<script>
-const API = "https://script.google.com/macros/s/AKfycbzvqdCRE_qLfGVbgeUTTEWkxAWPXoHvvUQ9uKUDevAt53V5cWASmRyAbEO_ufzjC88/exec";
-let enviando = false;
+    let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
+    let sessionData = JSON.parse(localStorage.getItem('acalanto_session')) || null;
+    let currentLocation = null;
 
-// Seleção dos elementos para controle de estado
-const btnIniciar = document.querySelector('.entrada');
-const btnFinalizar = document.querySelector('.saida');
-const campoNome = document.getElementById("nome");
-const campoCargo = document.getElementById("cargo");
-
-// --- LÓGICA DE ESTADO INICIAL ---
-btnFinalizar.disabled = true;
-btnFinalizar.classList.remove("ativo");
-btnIniciar.classList.add("ativo"); // Começa bloqueado
-validarCampos(); // Valida se já há algo preenchido (ex: preenchimento automático)
-
-// Ouvintes para validar os campos enquanto o usuário digita/seleciona
-campoNome.addEventListener('input', validarCampos);
-campoCargo.addEventListener('change', validarCampos);
-
-function validarCampos() {
-    // O botão iniciar só habilita se:
-    // 1. Nome e Cargo estiverem preenchidos
-    // 2. O serviço ainda NÃO foi iniciado (btnFinalizar ainda está desativado)
-    const camposOk = campoNome.value.trim() !== "" && campoCargo.value !== "";
-    
-    if (camposOk && btnFinalizar.disabled) {
-        btnIniciar.disabled = false;
-    } else {
-        btnIniciar.disabled = true;
+    function entrarFullscreen() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) return; 
+        const el = document.documentElement;
+        const requestMethod = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        if (requestMethod) requestMethod.call(el).catch(err => console.log(err));
     }
-}
 
-function horaAtual() {
-    return new Date().toLocaleString("pt-BR", { 
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit' 
+    document.addEventListener("click", entrarFullscreen, { once: true });
+
+    window.addEventListener('load', () => {
+        getLocation(); 
+        updateTimeToNow();
+        renderList();
+        if (sessionData) {
+            document.getElementById('professional').value = sessionData.professional;
+            document.getElementById('atendimento').value = sessionData.atendimento;
+        }
     });
-}
 
-function registrar(tipo) {
-    if (enviando) return;
-
-    const nome = campoNome.value;
-    const cargo = campoCargo.value;
-
-    if (!nome || !cargo) {
-        alert("Por favor, preencha todos os campos antes de prosseguir.");
-        return;
+    function getLocation() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => { currentLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude }; },
+                (err) => console.warn("Erro localização:", err.message),
+                { enableHighAccuracy: true, timeout: 5000 }
+            );
+        }
     }
 
-    const statusEl = document.getElementById("status");
-    statusEl.className = "status loading";
-    statusEl.innerHTML = "Obtendo localização GPS...";
+    function updateTimeToNow() {
+        const now = new Date();
+        document.getElementById("time").value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
 
-    navigator.geolocation.getCurrentPosition(
-        pos => {
-            enviar(nome, cargo, tipo, pos.coords.latitude, pos.coords.longitude);
-        },
-        () => {
-            statusEl.className = "status erro";
-            statusEl.innerHTML = "⚠ Ative o GPS para registrar o atendimento";
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-    );
-}
+    function toggleFraldaOptions() {
+        const activity = document.getElementById("activity").value;
+        document.getElementById("fraldaOptions").style.display = (activity === "troca de fralda") ? "block" : "none";
+    }
 
-function enviar(nome, cargo, tipo, lat, lon) {
-    enviando = true;
-    const statusEl = document.getElementById("status");
-    statusEl.className = "status loading";
-    statusEl.innerHTML = "Salvando registro...";
-
-    fetch(API, {
-        method: "POST",
-        body: JSON.stringify({
-            nome: nome,
-            cargo: cargo,
-            tipo: tipo,
-            data: horaAtual(),
-            lat: lat,
-            lon: lon
-        })
-    })
-    .then(r => r.text())
-    .then(() => {
-        statusEl.className = "status sucesso";
-        statusEl.innerHTML = tipo === "Início" 
-            ? "✔ Serviço iniciado com sucesso!" 
-            : "✔ Serviço finalizado com sucesso!";
-
-        // --- LÓGICA DE ALTERNÂNCIA DE BOTÕES APÓS SUCESSO ---
-        if (tipo === "Início") {
-
-    // Iniciar desliga
-    btnIniciar.disabled = true;
-    btnIniciar.classList.remove("ativo");
-
-    // Finalizar liga
-    btnFinalizar.disabled = false;
-    btnFinalizar.classList.add("ativo");
-
-} else {
-
-    // Finalizar desliga
-    btnFinalizar.disabled = true;
-    btnFinalizar.classList.remove("ativo");
-
-    // Iniciar volta ao normal
-    campoNome.value = "";
-    campoCargo.value = "";
-
-    validarCampos(); // reativa se válido
-
-}
-
-        enviando = false;
-        setTimeout(() => { statusEl.innerHTML = ""; }, 5000);
-    })
-    .catch(() => {
-        statusEl.className = "status erro";
-        statusEl.innerHTML = "❌ Erro ao salvar. Tente novamente.";
-        enviando = false;
+    document.getElementById("infoForm").addEventListener("submit", e => {
+        e.preventDefault();
+        sessionData = {
+            professional: document.getElementById("professional").value,
+            atendimento: document.getElementById("atendimento").value
+        };
+        localStorage.setItem('acalanto_session', JSON.stringify(sessionData));
+        alert("✅ Dados da sessão guardados!");
     });
-}
 
-function iniciarServico() {
-    if (confirm("Desejamos um excelente atendimento! Confirma o início do serviço agora?")) {
-        registrar("Início");
+    // --- FUNÇÃO DE ENVIO PARA O GOOGLE SHEETS ---
+    async function sendToGoogleSheets(data) {
+        if (GOOGLE_SCRIPT_URL === "SUA_URL_AQUI") return; // Não envia se não configurou a URL
+
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Necessário para Google Apps Script
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            console.log("Enviado para a planilha!");
+        } catch (error) {
+            console.error("Erro ao enviar:", error);
+        }
     }
-}
 
-function finalizarServico() {
-    if (confirm("Parabéns por mais um atendimento realizado com sucesso! Confirma a finalização do serviço agora?")) {
-        registrar("Fim");
+    document.getElementById("activityForm").addEventListener("submit", async e => {
+        e.preventDefault();
+        if (!sessionData) return alert("⚠️ Primeiro, confirme os dados da sessão!");
+
+        const activity = document.getElementById("activity").value;
+        let tipoTrocaLabel = "";
+        
+        if (activity === "troca de fralda") {
+            const r = document.querySelector('input[name="tipo_troca"]:checked');
+            if (!r) return alert("⚠️ Selecione o tipo de troca!");
+            const labels = { 'coco': '💩 Cocô', 'xixi': '💧 Xixi', 'coco_xixi': '💩💧 Ambos' };
+            tipoTrocaLabel = labels[r.value];
+        }
+
+        const newActivity = {
+            date: new Date().toLocaleDateString('pt-BR'),
+            professional: sessionData.professional,
+            atendimento: sessionData.atendimento,
+            time: document.getElementById("time").value,
+            activity: activity,
+            tipoTroca: tipoTrocaLabel,
+            obs: document.getElementById("obs").value,
+            location: currentLocation ? `${currentLocation.lat}, ${currentLocation.lon}` : "Não disponível"
+        };
+
+        // Salva Localmente
+        activitiesArray.push(newActivity);
+        localStorage.setItem('acalanto_activities', JSON.stringify(activitiesArray));
+        
+        // Envia para o Google Planilhas
+        sendToGoogleSheets(newActivity);
+
+        renderList();
+        e.target.reset();
+        updateTimeToNow();
+        toggleFraldaOptions();
+    });
+
+    function renderList() {
+        const list = document.getElementById("list");
+        if (activitiesArray.length === 0) {
+            list.innerHTML = '<li style="color:#999; text-align:center">Nenhum registro.</li>';
+            return;
+        }
+        list.innerHTML = '';
+        activitiesArray.forEach((item) => {
+            const li = document.createElement("li");
+            let titulo = item.activity.toUpperCase();
+            if (item.tipoTroca) titulo += ` - ${item.tipoTroca}`;
+            li.innerHTML = `
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>${item.time}</strong>
+                    <span style="color: #ff6fb7; font-weight: 700; font-size: 13px;">${titulo}</span>
+                </div>
+                ${item.obs ? `<div style="margin-top: 5px; font-size: 13px; color: #777; border-top: 1px dashed #eee; padding-top: 3px;">📝 ${item.obs}</div>` : ''}
+            `;
+            list.appendChild(li);
+        });
     }
-}
 
-/* Fullscreen */
-function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent); }
-function entrarFullscreen() {
-    if (isIOS()) return;
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-}
-document.body.addEventListener("click", entrarFullscreen, { once: true });
+    function clearAllData() {
+        if (confirm("⚠️ Deseja apagar tudo? Isso limpa apenas a lista local.")) {
+            localStorage.clear();
+            activitiesArray = [];
+            sessionData = null;
+            location.reload();
+        }
+    }
+
+    // Botões de salvar e compartilhar permanecem iguais...
+    document.getElementById("save").addEventListener("click", () => {
+        if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para salvar!");
+        let content = `DIÁRIO ACALANTO BEBÊ\nPROFISSIONAL: ${sessionData.professional}\nATENDIMENTO: ${sessionData.atendimento}\n\n`;
+        activitiesArray.forEach((a, i) => {
+            content += `${i+1}. [${a.time}] ${a.activity.toUpperCase()}${a.tipoTroca ? ' ('+a.tipoTroca+')' : ''}\n`;
+            content += `   📍 Localização: ${a.location}\n${a.obs ? '   Obs: '+a.obs : ''}\n---------------------------\n`;
+        });
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `diario_acalanto.txt`;
+        a.click();
+    });
+
+    document.getElementById("share").addEventListener("click", () => {
+        if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para compartilhar!");
+        let msg = `*DIÁRIO ACALANTO BEBÊ*\n*Profissional:* ${sessionData.professional}\n*Atendimento:* ${sessionData.atendimento}\n\n`;
+        activitiesArray.forEach(a => {
+            msg += `• [${a.time}] *${a.activity.toUpperCase()}* ${a.tipoTroca ? '['+a.tipoTroca+']' : ''}\n${a.obs ? '_'+a.obs+'_' : ''}\n\n`;
+        });
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    });
+
+    window.onbeforeunload = function() { if (activitiesArray.length > 0) return "Tem dados não salvos!"; };
 </script>
 </body>
 </html>
