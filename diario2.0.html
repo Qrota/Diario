@@ -504,7 +504,7 @@ button:active {
 
     document.getElementById("activityForm").addEventListener("submit", async e => {
         e.preventDefault();
-        if (!sessionData) return alert("⚠️ Primeiro, confirme os dados da sessão!");
+        if (!sessionData) return alert("⚠️ Primeiro, selecione seu nome e o atendimento!");
 
         const activity = document.getElementById("activity").value;
         let tipoTrocaLabel = "";
