@@ -77,7 +77,7 @@ body {
 
     padding: 20px 16px;
 
-    background: linear-gradient(#fcd9d979, #a0dcff5e);
+    background: linear-gradient(#fcd9d9b6, #a0dcffad);
 
     position: relative;
 
@@ -93,10 +93,6 @@ body {
     padding-top: calc(env(safe-area-inset-top) + 10px);
     padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
 }
-    /* SAFE AREA (notch iPhone) */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-}
 
 /* LOGO */
 .logo {
@@ -106,7 +102,7 @@ body {
 
 .logo h1 {
     font-weight: 300;
-    color: #ffaaaa;
+    color: #ff9e9e;
     font-size: 32px;
     text-shadow: 
         10px 10px 10px ,
@@ -164,12 +160,12 @@ select:focus, input:focus {
     cursor: pointer;
     font-size: 12px;
     font-weight: 700;
-    color: #666;
+    color: #616161;
     background: var(--bg);
 
     box-shadow: 
         4px 4px 8px var(--shadow-dark),
-        -4px -4px 8px var(--shadow-light);
+        -4px -4px 8px #b3b2b2;
 }
 
 .btn-now:active {
@@ -216,7 +212,7 @@ button {
 
     box-shadow: 
         6px 6px 12px var(--shadow-dark),
-        -6px -6px 12px var(--shadow-light);
+        -4px -4px 8px #b3b2b2;
 
     transition: 0.2s;
 }
@@ -229,11 +225,13 @@ button:active {
 
 /* BOTÕES ESPECÍFICOS */
 .btn-confirm { 
-    background: #fceaea;
+    background: #f0f4f8;
     color: #e07a9a;
+    
+
  }
 .btn-register { 
-    background: #e2fbfd;
+    background: #f0f4f8;
     color: #5bbbc5; margin-top: 10px; }
 
 .actions {
@@ -266,8 +264,11 @@ button:active {
 #list {
     list-style: none;
     margin-top: 15px;
+
     max-height: none; /* 🔥 remove limite */
+    
     overflow-y: visible; /* 🔥 deixa o container rolar */
+
 }
 
 #list li {
@@ -278,7 +279,7 @@ button:active {
 
     box-shadow: 
         4px 4px 8px var(--shadow-dark),
-        -4px -4px 8px var(--shadow-light);
+        -4px -4px 8px #d3d3d3;
 
     border-left: 4px solid #f3a8a8;
     animation: slideIn 0.3s ease;
@@ -342,14 +343,13 @@ button:active {
     .actions {
         grid-template-columns: 1fr; /* 🔥 evita esmagar */
     }
-
 }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo"><h1>Acalanto Bebê</h1></div>
+    <div class="logo"><h1>Diário Acalanto Bebê</h1></div>
 
     <form id="infoForm">
         <div class="field-group">
@@ -370,7 +370,7 @@ button:active {
                 <option>Mãe (Mariana) - Bebê (Antônio)</option>
             </select>
         </div>
-        <button type="submit" class="btn-confirm">Confirmar Dados da Sessão</button>
+        <button type="submit" class="btn-confirm">Iniciar Diário</button>
     </form>
 
     <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
@@ -423,7 +423,7 @@ button:active {
         <button onclick="clearAllData()" class="btn-clear">Limpar Tudo (Novo Plantão)</button>
     </div>
 
-    <div class="footer">Sistema Acalanto • v2.1</div>
+    <div class="footer">Sistema interno • Acalanto Bebê</div>
           <div class="footer-logo"></div>
 </div>
     <script>
