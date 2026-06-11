@@ -341,18 +341,23 @@
             <select id="professional" required>
                 <option value="">— Selecione —</option>
                 <option>Auricelia Gomes</option><option>Jociane Batista</option>
-                <option>Sonia Felix</option><option>Grazielle Pereira</option>
+                
                 <option>Carla Cantanhede</option>
             </select>
         </div>
         <div class="field-group">
             <label>Atendimento</label>
             <select id="atendimento" required>
-                <option value="">— Selecione —</option>
-                <option>Mãe (Livia) - Bebê (Gabriel)</option>
-                <option>Mãe (Mariah) - Bebês (Gêmeos)</option>
-                <option>Mãe (Mariana) - Bebê (Antônio)</option>
-            </select>
+    <option value="">— Selecione —</option>
+
+    <option value="LIVIA_GABRIEL">
+        Mãe (Livia) - Bebê (Gabriel)
+    </option>
+
+        <option value="LOHANE_DAVI">
+        Mãe (Lohane) - Bebê (Davi)
+    </option>
+</select>
         </div>
         <button type="submit" class="btn-confirm">Iniciar Diário</button>
     </form>
@@ -412,7 +417,7 @@
 </div>
     <script>
     // ⚠️ COLE A URL DA SUA IMPLANTAÇÃO AQUI EMBAIXO:
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzh5-squRJFg5rgQUtvSuah39kqv3ZB5GjhSIgA2Dl1HERelUGTH9lbdIxcgA6V_Lon/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0sEHjEg5K_oWFaHSlrFSato916mZpLQUTjBK85e5kKCh4DOiynIb3qpgRX04ZD7lo/exec";
 
     let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
     let sessionData = JSON.parse(localStorage.getItem('acalanto_session')) || null;
@@ -433,9 +438,12 @@
         updateTimeToNow();
         renderList();
         if (sessionData) {
-            document.getElementById('professional').value = sessionData.professional;
-            document.getElementById('atendimento').value = sessionData.atendimento;
-        }
+    document.getElementById('professional').value =
+        sessionData.professional;
+
+    document.getElementById('atendimento').value =
+        sessionData.atendimentoCodigo;
+}
     });
 
     function getLocation() {
@@ -459,30 +467,54 @@
     }
 
     document.getElementById("infoForm").addEventListener("submit", e => {
-        e.preventDefault();
-        sessionData = {
-            professional: document.getElementById("professional").value,
-            atendimento: document.getElementById("atendimento").value
-        };
-        localStorage.setItem('acalanto_session', JSON.stringify(sessionData));
-        alert("✅ Tudo pronto para o seu diário!");
-    });
+
+    e.preventDefault();
+
+    const atendimentoSelect =
+        document.getElementById("atendimento");
+
+    sessionData = {
+
+        professional:
+            document.getElementById("professional").value,
+
+        atendimento:
+            atendimentoSelect.options[
+                atendimentoSelect.selectedIndex
+            ].text,
+
+        atendimentoCodigo:
+            atendimentoSelect.value
+    };
+
+    localStorage.setItem(
+        "acalanto_session",
+        JSON.stringify(sessionData)
+    );
+
+    alert("✅ Tudo pronto para o seu diário!");
+});
 
     // --- FUNÇÃO DE ENVIO PARA O GOOGLE SHEETS ---
     async function sendToGoogleSheets(data) {
-        if (GOOGLE_SCRIPT_URL === "SUA_URL_AQUI") return; // Não envia se não configurou a URL
-
         try {
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Necessário para Google Apps Script
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/json' },
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", // 👈 Evita erros de CORS com o Google Script
+                headers: {
+                    "Content-Type": "text/plain" // 👈 Evita o preflight que bloqueia o envio
+                },
                 body: JSON.stringify(data)
             });
-            console.log("Enviado para a planilha!");
+
+            // Nota: No modo 'no-cors', a resposta vem opaca (vazia), 
+            // mas os dados CHEGAM e são salvos na planilha perfeitamente.
+            console.log("Requisição enviada para o Apps Script.");
+            return true;
+
         } catch (error) {
             console.error("Erro ao enviar:", error);
+            return false;
         }
     }
 
@@ -501,22 +533,39 @@
         }
 
         const newActivity = {
-            date: new Date().toLocaleDateString('pt-BR'),
-            professional: sessionData.professional,
-            atendimento: sessionData.atendimento,
-            time: document.getElementById("time").value,
-            activity: activity,
-            tipoTroca: tipoTrocaLabel,
-            obs: document.getElementById("obs").value,
-            location: currentLocation ? `${currentLocation.lat}, ${currentLocation.lon}` : "Não disponível"
-        };
+    date: new Date().toLocaleDateString('pt-BR'),
+    timestamp: new Date().toISOString(),
+
+    professional: sessionData.professional,
+    atendimento: sessionData.atendimento,
+    atendimentoCodigo: sessionData.atendimentoCodigo,
+
+    time: document.getElementById("time").value,
+    activity: activity,
+    tipoTroca: tipoTrocaLabel,
+    obs: document.getElementById("obs").value,
+
+    location: currentLocation
+        ? `${currentLocation.lat}, ${currentLocation.lon}`
+        : "Não disponível"
+};
 
         // Salva Localmente
         activitiesArray.push(newActivity);
         localStorage.setItem('acalanto_activities', JSON.stringify(activitiesArray));
         
         // Envia para o Google Planilhas
-        sendToGoogleSheets(newActivity);
+        const enviado =
+    await sendToGoogleSheets(
+        newActivity
+    );
+
+if (!enviado) {
+
+    alert(
+        "Registro salvo localmente. Não foi possível sincronizar com a planilha."
+    );
+}
 
         renderList();
         e.target.reset();
