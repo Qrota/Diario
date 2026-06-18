@@ -686,9 +686,23 @@ if (item.primeiroDespertar)
         if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para salvar!");
         let content = `DIÁRIO ACALANTO BEBÊ\nPROFISSIONAL: ${sessionData.professional}\nATENDIMENTO: ${sessionData.atendimento}\n\n`;
         activitiesArray.forEach((a, i) => {
-            content += `${i+1}. [${a.time}] ${a.activity.toUpperCase()}${a.tipoTroca ? ' ('+a.tipoTroca+')' : ''}\n`;
-            content += `   📍 Localização: ${a.location}\n${a.obs ? '   Obs: '+a.obs : ''}\n---------------------------\n`;
-        });
+
+    let detalhes = [];
+    if (a.tipoTroca)
+        detalhes.push(a.tipoTroca);
+    if (a.tipoSono)
+        detalhes.push(a.tipoSono);
+    if (a.primeiroDespertar)
+        detalhes.push("Primeiro despertar");
+    content += `${i + 1}. [${a.time}] ${a.activity.toUpperCase()}`;
+    if (detalhes.length)
+        content += ` (${detalhes.join(" | ")})`;
+    content += `\n`;
+    content += `   📍 Localização: ${a.location}\n`;
+    if (a.obs)
+        content += `   Obs: ${a.obs}\n`;
+    content += `---------------------------\n`;
+});
         const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
@@ -700,11 +714,22 @@ if (item.primeiroDespertar)
         if (!sessionData || activitiesArray.length === 0) return alert("⚠️ Nada para compartilhar!");
         let msg = `*DIÁRIO ACALANTO BEBÊ*\n*Profissional:* ${sessionData.professional}\n*Atendimento:* ${sessionData.atendimento}\n\n`;
         activitiesArray.forEach(a => {
-            msg += `• [${a.time}] *${a.activity.toUpperCase()}* ${a.tipoTroca ? '['+a.tipoTroca+']' : ''}\n${a.obs ? '_'+a.obs+'_' : ''}\n\n`;
-        });
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+    let detalhes = [];
+    if (a.tipoTroca)
+        detalhes.push(a.tipoTroca);
+    if (a.tipoSono)
+        detalhes.push(a.tipoSono);
+    if (a.primeiroDespertar)
+        detalhes.push("Primeiro despertar");
+    msg += `• [${a.time}] *${a.activity.toUpperCase()}*`;
+    if (detalhes.length)
+        msg += ` [${detalhes.join(" | ")}]`;
+    msg += `\n`;
+    if (a.obs)
+        msg += `_${a.obs}_`;
+    msg += `\n\n`;
+});        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     });
-
     window.onbeforeunload = function() { if (activitiesArray.length > 0) return "Tem dados não salvos!"; };
 </script>
 </body>
