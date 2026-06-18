@@ -375,14 +375,14 @@
 
         <div class="field-group">
             <label>Atividade</label>
-            <select id="activity" required onchange="toggleFraldaOptions()">
+            <select id="activity" required onchange="toggleActivityOptions()">
                 <option value="">Selecione...</option>
                 <option value="troca de fralda">🚼 Troca de fralda</option>
                 <option value="medicacao">💊 Medicação</option>
                 <option value="banho">🛁 Banho</option>
                 <option value="recreacao">🧸 Recreação </option>
                 <option value="amamentacao">🍼 Amamentação</option>
-                <option value="sono">😴 Bebê dormindo</option>
+                <option value="sono">😴 Sono (Janelas) </option>
             </select>
         </div>
 
@@ -394,6 +394,17 @@
                 <label><input type="radio" name="tipo_troca" value="coco_xixi"> 💩💧 Ambos</label>
             </div>
         </div>
+        <div id="sonoOptions" style="display: none;" class="field-group">
+        <label>Evento de Sono</label>
+        <div class="radio-group">
+            <label><input type="radio" name="tipo_sono" value="dormiu"> 🛌 Dormiu (Fecha Janela)</label>
+            <label><input type="radio" name="tipo_sono" value="acordou"> ☀️ Acordou (Abre Janela)</label>
+        </div>
+        <div style="margin-top: 10px;">
+            <label><input type="checkbox" id="primeiro_despertar" value="sim"> Primeiro despertar do dia (Início da rotina)</label>
+        </div>
+    </div>
+
 
         <div class="field-group">
             <label>Observação</label>
@@ -417,7 +428,7 @@
 </div>
     <script>
     // ⚠️ COLE A URL DA SUA IMPLANTAÇÃO AQUI EMBAIXO:
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0sEHjEg5K_oWFaHSlrFSato916mZpLQUTjBK85e5kKCh4DOiynIb3qpgRX04ZD7lo/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf6QsPZi6XCWiS76HKIjsE8X0Ubuuk7EReRx4L6PEry42WOXL-ZzVzQWxVSObYDTUu/exec";
 
     let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
     let sessionData = JSON.parse(localStorage.getItem('acalanto_session')) || null;
@@ -445,6 +456,10 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0sEHjEg5K_o
         sessionData.atendimentoCodigo;
 }
     });
+    function toggleActivityOptions() {
+    toggleFraldaOptions();
+    toggleSonoOptions();
+}
 
     function getLocation() {
         if ("geolocation" in navigator) {
@@ -465,7 +480,31 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0sEHjEg5K_o
         const activity = document.getElementById("activity").value;
         document.getElementById("fraldaOptions").style.display = (activity === "troca de fralda") ? "block" : "none";
     }
+     function toggleSonoOptions() {
 
+    const activity =
+        document.getElementById("activity").value;
+
+    const sonoOptions =
+        document.getElementById("sonoOptions");
+
+    if (activity === "sono") {
+
+        sonoOptions.style.display = "block";
+
+    } else {
+
+        sonoOptions.style.display = "none";
+
+        document
+            .querySelectorAll('input[name="tipo_sono"]')
+            .forEach(r => r.checked = false);
+
+        document.getElementById(
+            "primeiro_despertar"
+        ).checked = false;
+    }
+}
     document.getElementById("infoForm").addEventListener("submit", e => {
 
     e.preventDefault();
@@ -521,9 +560,26 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0sEHjEg5K_o
     document.getElementById("activityForm").addEventListener("submit", async e => {
         e.preventDefault();
         if (!sessionData) return alert("⚠️ Primeiro, selecione seu nome e o atendimento!");
-
         const activity = document.getElementById("activity").value;
         let tipoTrocaLabel = "";
+        let tipoSonoLabel = "";
+        let primeiroDespertar = false;
+
+        if (activity === "sono") {
+    const sonoSelecionado =
+        document.querySelector('input[name="tipo_sono"]:checked');
+    if (!sonoSelecionado)
+        return alert("⚠️ Selecione Dormiu ou Acordou!");
+
+    const labelsSono = {
+        dormiu: "🛌 Dormiu",
+        acordou: "☀️ Acordou"
+    };
+    tipoSonoLabel = labelsSono[sonoSelecionado.value];
+    primeiroDespertar =
+        document.getElementById("primeiro_despertar").checked;
+}
+
         
         if (activity === "troca de fralda") {
             const r = document.querySelector('input[name="tipo_troca"]:checked');
@@ -542,7 +598,11 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0sEHjEg5K_o
 
     time: document.getElementById("time").value,
     activity: activity,
+
     tipoTroca: tipoTrocaLabel,
+    tipoSono: tipoSonoLabel,
+    primeiroDespertar: primeiroDespertar,
+
     obs: document.getElementById("obs").value,
 
     location: currentLocation
@@ -569,8 +629,20 @@ if (!enviado) {
 
         renderList();
         e.target.reset();
+        document
+    .querySelectorAll('input[name="tipo_sono"]')
+    .forEach(r => r.checked = false);
+
+document
+    .querySelectorAll('input[name="tipo_troca"]')
+    .forEach(r => r.checked = false);
+
+document.getElementById(
+    "primeiro_despertar"
+).checked = false;
         updateTimeToNow();
         toggleFraldaOptions();
+        toggleSonoOptions();
     });
 
     function renderList() {
@@ -583,7 +655,12 @@ if (!enviado) {
         activitiesArray.forEach((item) => {
             const li = document.createElement("li");
             let titulo = item.activity.toUpperCase();
-            if (item.tipoTroca) titulo += ` - ${item.tipoTroca}`;
+if (item.tipoTroca)
+    titulo += ` - ${item.tipoTroca}`;
+if (item.tipoSono)
+    titulo += ` - ${item.tipoSono}`;
+if (item.primeiroDespertar)
+    titulo += ` (Primeiro despertar)`;
             li.innerHTML = `
                 <div style="display: flex; justify-content: space-between;">
                     <strong>${item.time}</strong>
