@@ -399,6 +399,8 @@
         <div class="radio-group">
             <label><input type="radio" name="tipo_sono" value="dormiu"> 🛌 Dormiu (Fecha Janela)</label>
             <label><input type="radio" name="tipo_sono" value="acordou"> ☀️ Acordou (Abre Janela)</label>
+            <label><input type="radio" name="tipo_sono" value="despertou_voltou"> 😴 Despertou (Voltou a dormir)</label>
+            <label><input type="radio" name="tipo_sono" value="despertou_colo"> 🤱 Despertou (Pego no colo)</label> 
         </div>
         <div style="margin-top: 10px;">
             <label><input type="checkbox" id="primeiro_despertar" value="sim"> Primeiro despertar do dia (Início da rotina)</label>
@@ -573,7 +575,9 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf6QsPZi6XCW
 
     const labelsSono = {
         dormiu: "🛌 Dormiu",
-        acordou: "☀️ Acordou"
+        acordou: "☀️ Acordou",
+        despertou_voltou: "😴 Despertou (Voltou a dormir)",
+        despertou_colo: "🤱 Despertou (Pego no colo)"
     };
     tipoSonoLabel = labelsSono[sonoSelecionado.value];
     primeiroDespertar =
