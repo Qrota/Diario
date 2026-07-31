@@ -373,7 +373,6 @@
                 <button type="button" class="btn-now" onclick="updateTimeToNow()">AGORA</button>
             </div>
         </div>
-
         <div class="field-group">
             <label>Atividade</label>
             <select id="activity" required onchange="toggleActivityOptions()">
@@ -386,7 +385,6 @@
                 <option value="sono">😴 Sono (Janelas) </option>
             </select>
         </div>
-
         <div id="fraldaOptions" style="display: none;" class="field-group">
             <label>Tipo de troca</label>
             <div class="radio-group">
@@ -407,8 +405,6 @@
             <label><input type="checkbox" id="primeiro_despertar" value="sim"> Primeiro despertar do dia (Início da rotina)</label>
         </div>
     </div>
-
-
         <div class="field-group">
             <label>Observação</label>
             <input type="text" id="obs" placeholder="Ex: Mamou 15min cada seio">
@@ -430,7 +426,6 @@
           <div class="footer-logo"></div>
 </div>
     <script>
-    // ⚠️ COLE A URL DA SUA IMPLANTAÇÃO AQUI EMBAIXO:
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2mcNQyW_JQYK1hjvuYcYTmkucSbc4spJl7JH0JYWyeoGgF6BKOLp6N_/exec";
 
     let activitiesArray = JSON.parse(localStorage.getItem('acalanto_activities')) || [];
@@ -444,9 +439,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2
         const requestMethod = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
         if (requestMethod) requestMethod.call(el).catch(err => console.log(err));
     }
-
     document.addEventListener("click", entrarFullscreen, { once: true });
-
     window.addEventListener('load', () => {
         getLocation(); 
         updateTimeToNow();
@@ -454,7 +447,6 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2
         if (sessionData) {
     document.getElementById('professional').value =
         sessionData.professional;
-
     document.getElementById('atendimento').value =
         sessionData.atendimentoCodigo;
 }
@@ -463,7 +455,6 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2
     toggleFraldaOptions();
     toggleSonoOptions();
 }
-
     function getLocation() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
@@ -473,7 +464,6 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2
             );
         }
     }
-
     function updateTimeToNow() {
         const now = new Date();
         document.getElementById("time").value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -484,25 +474,17 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2
         document.getElementById("fraldaOptions").style.display = (activity === "troca de fralda") ? "block" : "none";
     }
      function toggleSonoOptions() {
-
     const activity =
         document.getElementById("activity").value;
-
     const sonoOptions =
         document.getElementById("sonoOptions");
-
     if (activity === "sono") {
-
         sonoOptions.style.display = "block";
-
     } else {
-
         sonoOptions.style.display = "none";
-
         document
             .querySelectorAll('input[name="tipo_sono"]')
             .forEach(r => r.checked = false);
-
         document.getElementById(
             "primeiro_despertar"
         ).checked = false;
@@ -536,15 +518,13 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTzx12loJh2
 
     alert("✅ Tudo pronto para o seu diário!");
 });
-
-    // --- FUNÇÃO DE ENVIO PARA O GOOGLE SHEETS ---
     async function sendToGoogleSheets(data) {
         try {
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors", // 👈 Evita erros de CORS com o Google Script
+                mode: "no-cors", 
                 headers: {
-                    "Content-Type": "text/plain" // 👈 Evita o preflight que bloqueia o envio
+                    "Content-Type": "text/plain" 
                 },
                 body: JSON.stringify(data)
             });
